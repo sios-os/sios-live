@@ -48,7 +48,7 @@ def convert_to_gguf(model_path: Path, output_dir: Path):
         base_model_name = adapter_cfg.get("base_model_name_or_path", "Qwen/Qwen2.5-32B-Instruct")
         log("convert", f"Base model: {base_model_name}")
 
-        # Merge LoRA into base model
+        # Merge LoRA into base model — must load in full bf16, not 4-bit
         merged_path = output_dir / "anubis_v3_merged"
         merge_script = f"""
 import torch
@@ -56,11 +56,12 @@ from unsloth import FastLanguageModel
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-print("Loading base model: {base_model_name}")
+print("Loading base model in full bf16: {base_model_name}")
 base_model = AutoModelForCausalLM.from_pretrained(
     "{base_model_name}",
     torch_dtype=torch.bfloat16,
     device_map="cpu",
+    low_cpu_mem_usage=True,
 )
 tokenizer = AutoTokenizer.from_pretrained("{base_model_name}")
 
@@ -69,6 +70,10 @@ model = PeftModel.from_pretrained(base_model, "{model_path}")
 
 print("Merging adapter into base model...")
 model = model.merge_and_unload()
+
+# Remove any quantization config so llama.cpp can convert it
+if hasattr(model.config, "quantization_config"):
+    del model.config.quantization_config
 
 print("Saving merged model to: {merged_path}")
 model.save_pretrained("{merged_path}", safe_serialization=True)
