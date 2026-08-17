@@ -48,8 +48,25 @@ def convert_to_gguf(model_path: Path, output_dir: Path):
     log("convert", "Building llama.cpp...")
     build_dir = llama_cpp_dir / "build"
     build_dir.mkdir(exist_ok=True)
-    subprocess.run(["cmake", "..", "-DGGML_CUDA=ON"], cwd=str(build_dir), check=True)
-    subprocess.run(["make", "-j", "16"], cwd=str(build_dir), check=True)
+
+    # Find nvcc for CUDA support
+    nvcc_path = None
+    for candidate in ["/usr/local/cuda/bin/nvcc", "/opt/cuda/bin/nvcc"]:
+        if Path(candidate).exists():
+            nvcc_path = candidate
+            break
+
+    env = os.environ.copy()
+    if nvcc_path:
+        env["CUDACXX"] = nvcc_path
+        cmake_args = ["cmake", "..", "-DGGML_CUDA=ON"]
+    else:
+        # No CUDA compiler — build CPU-only (fine for conversion, slower for inference test)
+        log("convert", "No nvcc found — building CPU-only llama.cpp")
+        cmake_args = ["cmake", "..", "-DGGML_CUDA=OFF"]
+
+    subprocess.run(cmake_args, cwd=str(build_dir), check=True, env=env)
+    subprocess.run(["make", "-j", "16"], cwd=str(build_dir), check=True, env=env)
 
     # Convert to GGUF
     convert_script = llama_cpp_dir / "convert_hf_to_gguf.py"
