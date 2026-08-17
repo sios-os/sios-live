@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "9483fe0819c008cbd8f5623db976a18e17e80acd2c378e88b2683263154ade58",
+  "description": "Write a function that joins a list of strings with a delimiter",
+  "evidence": {
+    "duration_s": 0.093,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.09s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: Hello World\nactual: apple,banana,cherry\nactual: \nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "join_with_delimiter",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667080.8117256,
+    "ledger_seq": 542,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that joins a list of strings with a delimiter"
+  },
+  "version": 1
+}

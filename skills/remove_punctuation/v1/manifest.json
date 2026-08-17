@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "27508296d5320d62e31e419230ca430cc7a1dce88add16383f1011ab546b4cb2",
+  "description": "Write a function that removes all punctuation from a string",
+  "evidence": {
+    "duration_s": 0.08,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.08s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: Hello World\nactual: No punctuation here\nactual: Punctuation\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "remove_punctuation",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786666880.5917165,
+    "ledger_seq": 488,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that removes all punctuation from a string"
+  },
+  "version": 1
+}

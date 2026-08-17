@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE greeter SYSTEM "greeter.dtd">
+<!--
+  SIOS LightDM Greeter — branded login screen.
+  Shows the SIOS hexagonal brand mark, the title, and a minimal login form.
+-->
+<greeter>
+  <style>
+    .background {
+      background-color: #02070d;
+      background-image: radial-gradient(circle at 50% 30%, #0a1218 0%, transparent 50%);
+    }
+    .brand-hex {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+    }
+    .brand-title {
+      font-family: serif;
+      font-size: 42px;
+      font-weight: 500;
+      color: #e1c77e;
+      letter-spacing: 0.16em;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: #4e565d;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .login-form {
+      text-align: center;
+    }
+    .login-prompt {
+      color: #78818a;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .login-input {
+      background: #111419;
+      border: 1px solid #282d32;
+      color: #e9edf0;
+      padding: 10px 16px;
+      font-size: 14px;
+      width: 240px;
+    }
+    .login-message {
+      color: #8b3a3a;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+    .session-label {
+      color: #6c5b39;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 24px;
+    }
+    .anubis-status {
+      color: #4e565d;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .clock {
+      color: #c4a35a;
+      font-family: monospace;
+      font-size: 14px;
+      position: absolute;
+      top: 24px;
+      right: 32px;
+    }
+  </style>
+  <div class="background">
+    <div class="clock" id="clock"></div>
+    <div style="margin-top: 12%;">
+      <div class="brand-title">SIOS</div>
+      <div class="brand-subtitle">Sovereign Interactive Operating System</div>
+      <div class="login-form">
+        <div class="login-prompt">Creator authentication required</div>
+        <input class="login-input" id="username" type="text" placeholder="Username" />
+        <input class="login-input" id="password" type="password" placeholder="Password" />
+        <div class="login-message" id="message"></div>
+        <div class="session-label">Session: SIOS Spatial Desktop</div>
+        <div class="anubis-status">ANUBIS: 550 knowledge documents | 15,677 verified claims | 13 skills</div>
+      </div>
+    </div>
+  </div>
+</greeter>

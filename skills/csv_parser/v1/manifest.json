@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "a23e04252c293182b28978e76d1c9404550cf7cdf56a4371bc0f47ef15bcd05a",
+  "description": "Build a CSV parser module with a function `parse_csv_line(line, delimiter=',')` that splits a CSV line handling quoted fields containing delimiters, and a helper `strip_quotes(field)` that removes surrounding quotes. Test with 'a,b,c' and '\"quoted\",unquoted,\"has,comma\"'.",
+  "evidence": {
+    "duration_s": 0.112,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.11s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: ['a', 'b', 'c']\nactual: ['quoted', 'unquoted', 'has,comma']\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "csv_parser",
+  "provenance": {
+    "attempt": 4,
+    "created_at": 1786597190.585383,
+    "ledger_seq": 128,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Build a CSV parser module with a function `parse_csv_line(line, delimiter=',')` that splits a CSV line handling quoted fields containing delimiters, and a helper `strip_quotes(field)` that removes surrounding quotes. Test with 'a,b,c' and '\"quoted\",unquoted,\"has,comma\"'."
+  },
+  "version": 1
+}

@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "926a0207326367477e179d32e507c30c222ba7fa320bc4257b0f2574757ff48d",
+  "description": "Write a function that returns the maximum value in a list of numbers",
+  "evidence": {
+    "duration_s": 0.042,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 5\nactual: -1\nactual: None\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "max_in_list",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667088.3807912,
+    "ledger_seq": 546,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the maximum value in a list of numbers"
+  },
+  "version": 1
+}

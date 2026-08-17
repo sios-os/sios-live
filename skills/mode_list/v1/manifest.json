@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "18759052f1385fda9421e507d5ec77b00694a8cd944ee2961c4d31b24e84fd05",
+  "description": "Write a function that returns the most common value in a list of numbers. If there are ties, return all modes.",
+  "evidence": {
+    "duration_s": 0.428,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.43s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [2]\nactual: [1, 2]\nactual: []\nactual: [5]\nactual: [2, 3]\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "mode_list",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786670348.0084078,
+    "ledger_seq": 760,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that returns the most common value in a list of numbers. If there are ties, return all modes."
+  },
+  "version": 1
+}

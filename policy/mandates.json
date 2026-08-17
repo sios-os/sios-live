@@ -1,0 +1,44 @@
+[
+  {
+    "mandate_id": "mandate_ollama_cloud",
+    "description": "Ollama cloud backup (monthly)",
+    "payee": "ollama.com",
+    "amount_limit": 10.0,
+    "currency": "USD",
+    "frequency": "monthly",
+    "active": true,
+    "created_at": 1786658572.065386,
+    "last_executed": 0.0,
+    "next_execution": 0.0,
+    "max_total": 120.0,
+    "expires_at": 0.0
+  },
+  {
+    "mandate_id": "mandate_domain",
+    "description": "Domain registration renewal (yearly)",
+    "payee": "namecheap.com",
+    "amount_limit": 15.0,
+    "currency": "USD",
+    "frequency": "yearly",
+    "active": true,
+    "created_at": 1786658572.0653915,
+    "last_executed": 0.0,
+    "next_execution": 0.0,
+    "max_total": 100.0,
+    "expires_at": 0.0
+  },
+  {
+    "mandate_id": "mandate_electricity",
+    "description": "Server electricity (monthly)",
+    "payee": "utility_co",
+    "amount_limit": 80.0,
+    "currency": "USD",
+    "frequency": "monthly",
+    "active": true,
+    "created_at": 1786658572.0653934,
+    "last_executed": 0.0,
+    "next_execution": 0.0,
+    "max_total": 960.0,
+    "expires_at": 0.0
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "77868e0dbaea222be94b785a6a939e03b8a3aa6cc7cc91d5237971f785cedb5b",
+  "description": "Write a function that counts vowels and consonants in a string, returning both counts",
+  "evidence": {
+    "duration_s": 0.138,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.14s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: (3, 7)\nactual: (0, 0)\nactual: (0, 21)\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "count_vowels_and_consonants",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786666865.866226,
+    "ledger_seq": 483,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that counts vowels and consonants in a string, returning both counts"
+  },
+  "version": 1
+}

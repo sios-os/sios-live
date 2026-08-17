@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "c44a21d08faa5102a12368eb2786839b24872a026b9782e14798260f58a2582b",
+  "description": "Checks if a string is a palindrome",
+  "evidence": {
+    "duration_s": 0.048,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.05s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: True\nactual: False\nactual: True\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "checks_if_a",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786643098.8084838,
+    "ledger_seq": 189,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Checks if a string is a palindrome"
+  },
+  "version": 3
+}

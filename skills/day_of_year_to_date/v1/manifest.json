@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "a1db0b24a691bb9608ad9bf57b46e673e55e40ee847f8dd6c2d605df0bf28866",
+  "description": "Write a function that converts a day of the year (1-366) and a year back to a date (year, month, day)",
+  "evidence": {
+    "duration_s": 0.521,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.52s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: (2023, 1, 1)\nactual: (2021, 12, 31)\nactual: (2020, 12, 31)\nactual: Invalid day of the year\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "day_of_year_to_date",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786668742.5792603,
+    "ledger_seq": 721,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that converts a day of the year (1-366) and a year back to a date (year, month, day)"
+  },
+  "version": 1
+}

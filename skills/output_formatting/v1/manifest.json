@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "c526d9e4955e502be9316ab41b4af0373893b4a92cdc432aa8c160c012456d1b",
+  "description": "Build a function to format the results as JSON, including both word frequencies and unique words.",
+  "evidence": {
+    "duration_s": 0.389,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.39s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: {\"word_frequencies\": {\"hello\": 2, \"world\": 1}, \"unique_words\": [\"hello\", \"world\"]}\nactual: {\"word_frequencies\": {\"a\": 3}, \"unique_words\": [\"a\"]}\nactual: {\"word_frequencies\": {}, \"unique_words\": []}\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "output_formatting",
+  "provenance": {
+    "attempt": 5,
+    "created_at": 1786600450.9543507,
+    "ledger_seq": 174,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Build a function to format the results as JSON, including both word frequencies and unique words."
+  },
+  "version": 1
+}

@@ -1,0 +1,25 @@
+{
+  "name": "anubis-companion",
+  "displayName": "ANUBIS",
+  "description": "ANUBIS phone companion — telemetry, chat, alerts",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "icon": "./assets/icon.png",
+  "permissions": [
+    "ACCESS_FINE_LOCATION",
+    "ACCESS_COARSE_LOCATION",
+    "ACCESS_BACKGROUND_LOCATION",
+    "FOREGROUND_SERVICE",
+    "VIBRATE",
+    "RECEIVE_BOOT_COMPLETED",
+    "POST_NOTIFICATIONS",
+    "BODY_SENSORS",
+    "ACTIVITY_RECOGNITION"
+  ],
+  "android": {
+    "package": "ai.anubis.companion",
+    "versionCode": 1,
+    "minSdkVersion": 24,
+    "targetSdkVersion": 34
+  }
+}

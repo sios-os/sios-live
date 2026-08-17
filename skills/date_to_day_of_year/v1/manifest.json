@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "4a1dbaf029b6383743b79bf5c445a572dde94eb73dd72a994057155246c805ec",
+  "description": "Write a function that converts a date (year, month, day) to the day of the year (1-366)",
+  "evidence": {
+    "duration_s": 0.643,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.64s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 1\nactual: 366\nCaught expected ValueError\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "date_to_day_of_year",
+  "provenance": {
+    "attempt": 3,
+    "created_at": 1786668558.9895582,
+    "ledger_seq": 715,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that converts a date (year, month, day) to the day of the year (1-366)"
+  },
+  "version": 1
+}

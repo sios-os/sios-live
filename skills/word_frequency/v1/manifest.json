@@ -1,0 +1,30 @@
+{
+  "artifact_hash": "40c06832233e786f755ce3dc3c62edf7b5eac37e697e942976c185755d4607fd",
+  "description": "Count word frequencies in a string. Return a dict mapping each lowercase word to its count. Words are separated by whitespace. Punctuation attached to words should be stripped. Empty string returns empty dict.",
+  "evidence": {
+    "duration_s": 0.067,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "sandbox_summary": "ok exit=0 0.07s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: {'hello': 2, 'world': 1}\nactual: {}\nactual: {'one': 1, 'two': 2, 'three': 3}\nTESTS PASSED\n"
+  },
+  "name": "word_frequency",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786595882.9638116,
+    "ledger_seq": 34,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Count word frequencies in a string. Return a dict mapping each lowercase word to its count. Words are separated by whitespace. Punctuation attached to words should be stripped. Empty string returns empty dict."
+  },
+  "version": 1
+}

@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "d0cc65a68f8cf3f49b315067a3250e9d522cab3b248a780f46502bad70a8c616",
+  "description": "Write a function that performs basic string compression (aabbbcccc -> a2b3c4)",
+  "evidence": {
+    "duration_s": 0.029,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.03s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: a2b3c4\nactual: \nactual: a1b1c1\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "string_compress",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786659107.503236,
+    "ledger_seq": 267,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that performs basic string compression (aabbbcccc -> a2b3c4)"
+  },
+  "version": 1
+}

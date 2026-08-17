@@ -1,0 +1,187 @@
+{
+  "generated_at": "2026-08-13T15:36:28",
+  "system": "SIOS sios-live",
+  "components": {
+    "unit_tests": {
+      "status": "pass",
+      "output": [
+        "Ran 149 tests in 5.767s",
+        "OK"
+      ]
+    },
+    "skills": {
+      "count": 13,
+      "skills": [
+        {
+          "name": "checks_if_a",
+          "version": 4,
+          "hash": "c44a21d08faa5102a12368eb",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 1
+        },
+        {
+          "name": "chunk_list",
+          "version": 1,
+          "hash": "516c11032858479dcc39028c",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 3
+        },
+        {
+          "name": "count_vowels",
+          "version": 1,
+          "hash": "306b9acae2e58011fb2788f8",
+          "model": "llama3.1:8b",
+          "attempt": 1
+        },
+        {
+          "name": "csv_parser",
+          "version": 1,
+          "hash": "a23e04252c293182b28978e7",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 4
+        },
+        {
+          "name": "dedupe_preserving_order",
+          "version": 1,
+          "hash": "7d888e430b5d43f11d1e38fd",
+          "model": "llama3.1:8b",
+          "attempt": 2
+        },
+        {
+          "name": "json_config",
+          "version": 1,
+          "hash": "167c7b8080f5fbf1c387fcb1",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 4
+        },
+        {
+          "name": "output_formatting",
+          "version": 1,
+          "hash": "c526d9e4955e502be9316ab4",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 5
+        },
+        {
+          "name": "parse_duration",
+          "version": 1,
+          "hash": "2e86e3bb4449a0386e0c9460",
+          "model": "llama3.1:8b",
+          "attempt": 2
+        },
+        {
+          "name": "reverse_string",
+          "version": 1,
+          "hash": "14656f6b773bfdb6ffb67c59",
+          "model": "llama3.1:8b",
+          "attempt": 5
+        },
+        {
+          "name": "slugify",
+          "version": 1,
+          "hash": "90f68afc0f16cfb440075885",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 2
+        },
+        {
+          "name": "stack_queue",
+          "version": 1,
+          "hash": "0f7379f02ea1436763fd30f8",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 4
+        },
+        {
+          "name": "sum_even_numbers",
+          "version": 1,
+          "hash": "21e9c6e53445dc555728f911",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 1
+        },
+        {
+          "name": "word_frequency",
+          "version": 1,
+          "hash": "40c06832233e786f755ce3dc",
+          "model": "qwen2.5-coder:7b",
+          "attempt": 1
+        }
+      ]
+    },
+    "ledger": {
+      "entries": 206,
+      "integrity_ok": true,
+      "head": "248bc765210b3055c45acb6ea785d194",
+      "training_exemplars": 16
+    },
+    "sandbox": {
+      "label": "unshare net+mount, /mnt masked, dropped to nobody",
+      "network_blocked": true,
+      "host_mounts_masked": true,
+      "unprivileged": true
+    },
+    "model": {
+      "endpoint": "http://127.0.0.1:11434",
+      "version": "0.32.5",
+      "model": "llama3.1:8b",
+      "model_present": true,
+      "available": [
+        "qwen2.5-coder:7b",
+        "qwen2.5-coder:14b",
+        "qwen3.6:latest",
+        "llama3.1:8b",
+        "gemma3:4b",
+        "qwen3:4b"
+      ]
+    },
+    "daemon": {
+      "init": "ok"
+    },
+    "iso": {
+      "path": "/mnt/d/SIOS-Build/sios-live/sios-ubuntu-24.04.iso",
+      "size_mb": 2149,
+      "sha256": "c53e351f1798366982db3aeaa82f6f3b59f71b0434b061ac79db7460d821dccc"
+    },
+    "desktop": {
+      "scripts": 18,
+      "scenes": 3,
+      "rooms": 13,
+      "room_controllers": 13
+    },
+    "knowledge": {
+      "library_size": 550,
+      "total_claims": 15677,
+      "verified_docs": 550,
+      "tier_distribution": {
+        "3": 550
+      },
+      "directors": 14,
+      "specialties": 268
+    },
+    "claim_verification": {
+      "total": 15677,
+      "by_type": {
+        "definition": 1995,
+        "fact": 12964,
+        "process": 640,
+        "measurement": 78
+      },
+      "verified": 15366,
+      "corroborated": 160,
+      "contradicted": 1,
+      "unverified": 150
+    },
+    "grounding": {
+      "library_size": 550,
+      "claims_indexed": 15677,
+      "index_stats": {
+        "total_claims": 15677,
+        "by_type": {
+          "definition": 1995,
+          "fact": 12964,
+          "process": 640,
+          "measurement": 78
+        },
+        "specialties_indexed": 268,
+        "keywords_indexed": 17245
+      }
+    }
+  }
+}

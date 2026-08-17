@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "75de5138ce74e5ee05a655e7102e1abf31463f0689db2fc3b89b6fdb51b42c66",
+  "description": "Write a function that merges two dictionaries, with the second taking priority on conflicts",
+  "evidence": {
+    "duration_s": 0.1,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.10s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: {'a': 1, 'b': 3, 'c': 4}\nactual: {'a': 1, 'b': 2}\nactual: {'a': 1, 'b': 2}\nactual: {'a': 1, 'b': 2, 'c': 3}\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "merge_dicts",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667480.292671,
+    "ledger_seq": 643,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that merges two dictionaries, with the second taking priority on conflicts"
+  },
+  "version": 1
+}

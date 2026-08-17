@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "f20b63d437f3000c45430b13fbd91676f32dba34605365ae41b79c45c8a9d9bd",
+  "description": "Write a function that interleaves two lists into one",
+  "evidence": {
+    "duration_s": 0.089,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.09s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [1, 2, 3, 4, 5, 6]\nactual: ['a', 'b', 'c', 'd', 'e']\nactual: [1, 2]\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "interleave_lists",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667380.828834,
+    "ledger_seq": 611,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that interleaves two lists into one"
+  },
+  "version": 1
+}

@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "60d0f0227b5d0297b44a3213ecf9f2a3a95b9f5155050a0ab3d91e1fd5857b1f",
+  "description": "Write a function that replaces all occurrences of a substring with another in a string",
+  "evidence": {
+    "duration_s": 0.874,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.87s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: hello universe\nactual: hello \nCaught expected ValueError\nCaught expected ValueError\nCaught expected ValueError\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "replace_all",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786670139.3734949,
+    "ledger_seq": 751,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that replaces all occurrences of a substring with another in a string"
+  },
+  "version": 1
+}

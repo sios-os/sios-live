@@ -1,0 +1,19 @@
+[
+  {
+    "review_id": "caa3f5637ea83933",
+    "artifact_hash": "e15c45d660d898a271432efa7e5aa2c740e233a1c4c53a434a3ee6ae4dde476e",
+    "description": "Upgrade ANUBIS model from qwen2.5-coder:7b to qwen2.5-coder:14b for improved code generation",
+    "submitted_at": 1786658534.3344748,
+    "reviewed_at": 1786658534.3385637,
+    "verdict": "PROBATION",
+    "conditions": [
+      "must pass all 149 unit tests",
+      "must maintain sandbox isolation",
+      "must not degrade response quality",
+      "rollback plan required"
+    ],
+    "probation_until": 1789250534.338566,
+    "creator_approved": true,
+    "creator_approval_hash": "e15c45d660d898a271432efa7e5aa2c740e233a1c4c53a434a3ee6ae4dde476e"
+  }
+]

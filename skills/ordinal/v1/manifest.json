@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "5bc07432f1a9072c9513800a360f5ca8237f676db07ecc06f41f3b4adaeaa56f",
+  "description": "Write a function ordinal(n) that converts a number to its ordinal string. 1->'1st', 2->'2nd', 3->'3rd', 4->'4th', 11->'11th', 21->'21st'.",
+  "evidence": {
+    "duration_s": 0.087,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.09s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 1st\nactual: 2nd\nactual: 3rd\nactual: 4th\nactual: 11th\nactual: 21st\nactual: 0th\nactual: 101st\nactual: 102nd\nactual: 103rd\nactual: 104th\nactual: 111th\nactual: 112th\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "ordinal",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786659778.4177244,
+    "ledger_seq": 366,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function ordinal(n) that converts a number to its ordinal string. 1->'1st', 2->'2nd', 3->'3rd', 4->'4th', 11->'11th', 21->'21st'."
+  },
+  "version": 1
+}

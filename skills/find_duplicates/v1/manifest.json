@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "36c6f72f14d8903d82af99454cd937908a1dcf526e523a722a883aa0e2ae972c",
+  "description": "Write a function that returns a list of duplicate values in a list",
+  "evidence": {
+    "duration_s": 0.075,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.08s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [2, 5]\nactual: ['a']\nactual: []\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "find_duplicates",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786667344.0223978,
+    "ledger_seq": 598,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns a list of duplicate values in a list"
+  },
+  "version": 1
+}

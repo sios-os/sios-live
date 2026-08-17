@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "167c7b8080f5fbf1c387fcb17654bcfa3bc7cfd52caccbf6af61d1f2972c0686",
+  "description": "Build a JSON config parser module with `load_config(json_str)` that parses JSON and returns a dict, `get_value(config, key, default=None)` that safely gets a nested value using dot notation (e.g. 'a.b.c'), and `merge_configs(base, override)` that deep-merges two dicts. Test all three functions.",
+  "evidence": {
+    "duration_s": 0.074,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.07s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: {'a': 1, 'b': {'c': 2}}\nactual: 1\nactual: 2\nactual: 0\nactual: {'a': 1, 'b': {'c': 2, 'd': 3}, 'e': 4}\nactual: {'a': [3, 4]}\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "json_config",
+  "provenance": {
+    "attempt": 4,
+    "created_at": 1786597454.6276343,
+    "ledger_seq": 149,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Build a JSON config parser module with `load_config(json_str)` that parses JSON and returns a dict, `get_value(config, key, default=None)` that safely gets a nested value using dot notation (e.g. 'a.b.c'), and `merge_configs(base, override)` that deep-merges two dicts. Test all three functions."
+  },
+  "version": 1
+}

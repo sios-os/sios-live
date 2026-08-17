@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=SIOS
+Comment=Sovereign Interactive Operating System — Spatial Desktop
+Exec=/usr/local/bin/sios-session
+TryExec=/usr/local/bin/sios-session
+Icon=/usr/share/sios/icon.svg
+Type=Application
+DesktopNames=SIOS

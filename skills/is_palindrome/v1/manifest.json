@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "8694f547c66bb1f46efebfd2796af1129a6205b3283140ab647b76f1f62d1d31",
+  "description": "Write a function that checks if a string is a palindrome",
+  "evidence": {
+    "duration_s": 0.038,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: True\nactual: False\nactual: True\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "is_palindrome",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786658068.3738642,
+    "ledger_seq": 206,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that checks if a string is a palindrome"
+  },
+  "version": 1
+}

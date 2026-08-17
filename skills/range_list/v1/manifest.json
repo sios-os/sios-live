@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "97349ecde51e0719dc906822b9a39b9cf196d83d7b6fc39ddf2e62ddeb1c260e",
+  "description": "Write a function that returns the range (max - min) of a list of numbers",
+  "evidence": {
+    "duration_s": 0.037,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 4\nactual: 14\nactual: 0\nactual: None\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "range_list",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667186.420299,
+    "ledger_seq": 572,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the range (max - min) of a list of numbers"
+  },
+  "version": 1
+}

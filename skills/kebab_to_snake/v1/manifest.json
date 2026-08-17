@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "fc6b74b3dadf992cdfa7adaa84af88e0c535729f58582700c0f5f672c95f18fe",
+  "description": "Write a function that converts a kebab-case string to snake_case",
+  "evidence": {
+    "duration_s": 0.028,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.03s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: hello_world\nactual: one_two_three\nactual: \nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "kebab_to_snake",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786666915.3192875,
+    "ledger_seq": 505,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that converts a kebab-case string to snake_case"
+  },
+  "version": 1
+}

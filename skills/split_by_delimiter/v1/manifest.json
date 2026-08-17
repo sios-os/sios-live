@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "5b5dd6d1964f104f783ad4b62d153c528232264c966fee3a0d1379f30ad9ec2b",
+  "description": "Write a function that splits a string by a delimiter and returns a list of parts",
+  "evidence": {
+    "duration_s": 0.762,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.76s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: ['apple', 'banana', 'cherry']\nactual: ['']\nactual: ['apple banana cherry']\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "split_by_delimiter",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786670220.6620717,
+    "ledger_seq": 756,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that splits a string by a delimiter and returns a list of parts"
+  },
+  "version": 1
+}

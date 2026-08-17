@@ -1,0 +1,576 @@
+{
+  "metadata": {
+    "system": "SIOS ANUBIS",
+    "exported_from": "evidence ledger",
+    "total_ledger_entries": 247,
+    "total_training_exemplars": 26,
+    "format": "instruction-completion pairs for fine-tuning",
+    "total_promoted_skills": 23
+  },
+  "exemplars": [
+    {
+      "instruction": "Reverse a string. The function must accept str and return the reversed string. Handle empty string and unicode characters.",
+      "completion": "def reverse_string(s):\n    \"\"\"Reverses a string.\"\"\"\n    if not isinstance(s, str):\n        raise TypeError(\"Input must be a string\")\n    return s[::-1]",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Count the number of vowels (a, e, i, o, u) in a string. Case insensitive. Return an integer count.",
+      "completion": "def count_vowels(s):\n    \"\"\"\n    Count the number of vowels (a, e, i, o, u) in a string.\n    \n    Args:\n        s (str): The input string to count vowels from.\n    \n    Returns:\n        int: The total number of vowels found in the string.\n    \"\"\"\n    # Convert the string to lower case for case insensitive comparison\n    s = s.lower()\n    \n    # Initialize a counter variable to store the vowel count\n    count = 0\n    \n    # Iterate over each character in the string\n    for char in s:\n        # Check if the character is a vowel (a, e, i, o, u)\n        if char in 'aeiou':\n            # If it's a vowel, increment the counter\n            count += 1\n    \n    # Return the total vowel count\n    return count",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Remove duplicates from a list while preserving the order of first appearance. Must handle unhashable elements by falling back to a slower comparison.",
+      "completion": "def dedupe_preserving_order(iterable):\n    \"\"\"\n    Remove duplicates from an iterable while preserving the order of first appearance.\n    \n    This function uses a combination of hashability and slower comparison for unhashable elements.\n    \n    :param iterable: The input iterable to remove duplicates from\n    :return: A new list with duplicates removed, preserving the order of first appearance\n    \"\"\"\n    seen = set()\n    result = []\n    for element in iterable:\n        try:\n            # Try to use a hashable version of the element (e.g., frozenset) if it's not already hashable\n            hashed_element = hash(element)\n            if hashed_element not in seen:\n                seen.add(hashed_element)\n                result.append(element)\n        except TypeError:\n            # If the element is unhashable, fall back to slower comparison\n            if element not in seen:\n                seen.add(element)\n                result.append(element)\n    return result",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Parse a duration string like '2h30m', '45s', or '1h' into an integer number of seconds. Support h, m, and s units in any combination. Raise ValueError on invalid input.",
+      "completion": "def parse_duration(s):\n    \"\"\"\n    Parse a duration string like '2h30m', '45s', or '1h' into an integer number of seconds.\n    \n    Args:\n        s (str): A duration string with h, m, and/or s units in any combination.\n        \n    Returns:\n        int: The number of seconds represented by the input string.\n        \n    Raises:\n        ValueError: If the input string is invalid.\n    \"\"\"\n    import re\n    # Regular expression pattern to match one or more digits optionally followed by a unit (h/m/s)\n    pattern = r\"(\\d+)([hms])\"\n    \n    # Find all matches of the pattern in the input string\n    matches = re.findall(pattern, s)\n    \n    # Initialize total seconds to 0\n    total_seconds = 0\n    \n    # Iterate over each match and calculate its contribution to total seconds\n    for value, unit in matches:\n        if unit == 'h':\n            total_seconds += int(value) * 3600\n        elif unit == 'm':\n            total_seconds += int(value) * 60\n        elif unit == 's':\n            total_seconds += int(value)\n    \n    return total_seconds",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Convert a string to a URL-safe slug: lowercase, replace any run of non-alphanumeric characters with a single hyphen, strip leading and trailing hyphens. Empty string returns empty string.",
+      "completion": "def slugify(s):\n    \"\"\"Convert a string to a URL-safe slug: lowercase, replace any run of non-alphanumeric characters with a single hyphen, strip leading and trailing hyphens.\"\"\"\n    import re\n    s = s.lower()\n    s = re.sub(r'[^a-z0-9]+', '-', s)\n    s = s.strip('-')\n    return s",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Count word frequencies in a string. Return a dict mapping each lowercase word to its count. Words are separated by whitespace. Punctuation attached to words should be stripped. Empty string returns empty dict.",
+      "completion": "def word_frequency(text):\n    \"\"\"Count the frequency of each lowercase word in a string, ignoring punctuation.\"\"\"\n    import re\n    from collections import Counter\n\n    # Remove punctuation and convert to lowercase\n    cleaned_text = re.sub(r'[^\\w\\s]', '', text).lower()\n    \n    # Split the text into words\n    words = cleaned_text.split()\n    \n    # Count the frequency of each word\n    freq_dict = dict(Counter(words))\n    \n    return freq_dict",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Split a list into chunks of a given size. Return a list of lists. The last chunk may be smaller than size. If size <= 0, raise ValueError. Empty input list returns empty list.",
+      "completion": "def chunk_list(lst, size):\n    \"\"\"Split a list into chunks of a given size. Return a list of lists. The last chunk may be smaller than size. If size <= 0, raise ValueError. Empty input list returns empty list.\"\"\"\n    if size <= 0:\n        raise ValueError(\"Size must be greater than 0\")\n    return [lst[i:i + size] for i in range(0, len(lst), size)]",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Build a CSV parser module with a function `parse_csv_line(line, delimiter=',')` that splits a CSV line handling quoted fields containing delimiters, and a helper `strip_quotes(field)` that removes surrounding quotes. Test with 'a,b,c' and '\"quoted\",unquoted,\"has,comma\"'.",
+      "completion": "# Your module with multiple functions/classes\ndef parse_csv_line(line, delimiter=','):\n    \"\"\"Parse a CSV line handling quoted fields containing delimiters.\"\"\"\n    result = []\n    field = ''\n    quote_mode = False\n\n    for char in line:\n        if char == '\"':\n            quote_mode = not quote_mode\n        elif char == delimiter and not quote_mode:\n            result.append(strip_quotes(field))\n            field = ''\n        else:\n            field += char\n\n    result.append(strip_quotes(field))\n    return result\n\ndef strip_quotes(field):\n    \"\"\"Remove surrounding quotes from a field.\"\"\"\n    if len(field) >= 2 and field[0] == '\"' and field[-1] == '\"':\n        return field[1:-1]\n    return field",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Build a Stack and Queue data structure module. Implement a `Stack` class with push, pop, peek, and is_empty methods. Implement a `Queue` class with enqueue, dequeue, front, and is_empty methods. Test both classes thoroughly.",
+      "completion": "# Stack and Queue data structure module\n\nclass Stack:\n    \"\"\"Stack implementation using a list.\"\"\"\n    \n    def __init__(self):\n        self.items = []\n    \n    def push(self, item):\n        \"\"\"Add an item to the top of the stack.\"\"\"\n        self.items.append(item)\n    \n    def pop(self):\n        \"\"\"Remove the item from the top of the stack and return it.\"\"\"\n        if not self.is_empty():\n            return self.items.pop()\n        raise IndexError(\"pop from empty stack\")\n    \n    def peek(self):\n        \"\"\"Return the item at the top of the stack without removing it.\"\"\"\n        if not self.is_empty():\n            return self.items[-1]\n        raise IndexError(\"peek from empty stack\")\n    \n    def is_empty(self):\n        \"\"\"Check if the stack is empty.\"\"\"\n        return len(self.items) == 0\n\nclass Queue:\n    \"\"\"Queue implementation using a list.\"\"\"\n    \n    def __init__(self):\n        self.items = []\n    \n    def enqueue(self, item):\n        \"\"\"Add an item to the end of the queue.\"\"\"\n        self.items.append(item)\n    \n    def dequeue(self):\n        \"\"\"Remove the item from the front of the queue and return it.\"\"\"\n        if not self.is_empty():\n            return self.items.pop(0)\n        raise IndexError(\"dequeue from empty queue\")\n    \n    def front(self):\n        \"\"\"Return the item at the front of the queue without removing it.\"\"\"\n        if not self.is_empty():\n            return self.items[0]\n        raise IndexError(\"front from empty queue\")\n    \n    def is_empty(self):\n        \"\"\"Check if the queue is empty.\"\"\"\n        return len(self.items) == 0\n\ndef stack_queue():\n    \"\"\"One-line docstring.\"\"\"\n    pass",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Build a JSON config parser module with `load_config(json_str)` that parses JSON and returns a dict, `get_value(config, key, default=None)` that safely gets a nested value using dot notation (e.g. 'a.b.c'), and `merge_configs(base, override)` that deep-merges two dicts. Test all three functions.",
+      "completion": "import json\n\ndef load_config(json_str):\n    \"\"\"Parse JSON string and return a dictionary.\"\"\"\n    try:\n        return json.loads(json_str)\n    except json.JSONDecodeError as e:\n        raise ValueError(f\"Invalid JSON: {e}\")\n\ndef get_value(config, key, default=None):\n    \"\"\"Safely get a nested value using dot notation (e.g. 'a.b.c').\"\"\"\n    keys = key.split('.')\n    for k in keys:\n        if isinstance(config, dict) and k in config:\n            config = config[k]\n        else:\n            return default\n    return config\n\ndef merge_configs(base, override):\n    \"\"\"Deep-merge two dictionaries.\"\"\"\n    result = base.copy()\n    for k, v in override.items():\n        if isinstance(v, dict) and k in result and isinstance(result[k], dict):\n            result[k] = merge_configs(result[k], v)\n        else:\n            result[k] = v\n    return result",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Checks if a string is a palindrome",
+      "completion": "def checks_if_a(s):\n    \"\"\"Check if a string is a palindrome.\"\"\"\n    return s == s[::-1]",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Checks if a string is a palindrome",
+      "completion": "def checks_if_a(s):\n    \"\"\"Checks if a string is a palindrome.\"\"\"\n    return s == s[::-1]",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Build a function to format the results as JSON, including both word frequencies and unique words.",
+      "completion": "def output_formatting(word_frequencies, unique_words):\n    \"\"\"Format word frequencies and unique words as JSON.\"\"\"\n    result = {\n        \"word_frequencies\": word_frequencies,\n        \"unique_words\": unique_words\n    }\n    return json.dumps(result)",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Checks if a string is a palindrome",
+      "completion": "def checks_if_a(s):\n    \"\"\"Checks if a string is a palindrome.\"\"\"\n    return s == s[::-1]",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Checks if a string is a palindrome",
+      "completion": "def checks_if_a(s):\n    \"\"\"Checks if a string is a palindrome.\"\"\"\n    return s == s[::-1]",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that takes a list of numbers and returns the sum of all even numbers in the list",
+      "completion": "def sum_even_numbers(numbers):\n    \"\"\"Sum all even numbers in a list of numbers.\"\"\"\n    return sum(num for num in numbers if num % 2 == 0)",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that checks if a string is a palindrome",
+      "completion": "def is_palindrome(s):\n    \"\"\"Check if a string is a palindrome.\"\"\"\n    return s == s[::-1]",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that computes the factorial of a non-negative integer",
+      "completion": "def factorial(n):\n    \"\"\"Compute the factorial of a non-negative integer.\"\"\"\n    if n < 0:\n        raise ValueError(\"Input must be a non-negative integer\")\n    elif n == 0 or n == 1:\n        return 1\n    else:\n        result = 1\n        for i in range(2, n + 1):\n            result *= i\n        return result",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that returns the nth Fibonacci number",
+      "completion": "def fibonacci(n):\n    \"\"\"Return the nth Fibonacci number.\"\"\"\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        a, b = 0, 1\n        for _ in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that checks if a number is prime",
+      "completion": "def is_prime(n):\n    \"\"\"Check if a number is prime.\"\"\"\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that computes the greatest common divisor of two numbers",
+      "completion": "def gcd(a, b):\n    \"\"\"Compute the greatest common divisor of two numbers.\"\"\"\n    while b:\n        a, b = b, a % b\n    return a",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that reverses the order of words in a sentence",
+      "completion": "def reverse_words(sentence):\n    \"\"\"Reverse the order of words in a sentence.\"\"\"\n    return ' '.join(sentence.split()[::-1])",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that counts the number of words in a string",
+      "completion": "def count_words(s):\n    \"\"\"Count the number of words in a string.\"\"\"\n    return len(s.split())",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that converts a string to title case",
+      "completion": "def title_case(s):\n    \"\"\"Converts a string to title case.\"\"\"\n    return s.title()",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that flattens a nested list of arbitrary depth",
+      "completion": "def flatten_list(nested_list):\n    \"\"\"Flatten a nested list of arbitrary depth.\"\"\"\n    result = []\n    for item in nested_list:\n        if isinstance(item, list):\n            result.extend(flatten_list(item))\n        else:\n            result.append(item)\n    return result",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    },
+    {
+      "instruction": "Write a function that merges two sorted lists into one sorted list",
+      "completion": "def merge_sorted(list1, list2):\n    \"\"\"Merge two sorted lists into one sorted list.\"\"\"\n    merged_list = []\n    i, j = 0, 0\n\n    while i < len(list1) and j < len(list2):\n        if list1[i] < list2[j]:\n            merged_list.append(list1[i])\n            i += 1\n        else:\n            merged_list.append(list2[j])\n            j += 1\n\n    while i < len(list1):\n        merged_list.append(list1[i])\n        i += 1\n\n    while j < len(list2):\n        merged_list.append(list2[j])\n        j += 1\n\n    return merged_list",
+      "metadata": {
+        "skill_name": "",
+        "attempt": 0,
+        "passed": false,
+        "model": "",
+        "failure_reason": ""
+      }
+    }
+  ],
+  "skills": [
+    {
+      "instruction": "Write a function called checks_if_a",
+      "completion": "def checks_if_a(s):\n    \"\"\"Checks if a string is a palindrome.\"\"\"\n    return s == s[::-1]",
+      "metadata": {
+        "skill_name": "checks_if_a",
+        "version": 4,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "c44a21d08faa5102a12368eb",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called chunk_list",
+      "completion": "def chunk_list(lst, size):\n    \"\"\"Split a list into chunks of a given size. Return a list of lists. The last chunk may be smaller than size. If size <= 0, raise ValueError. Empty input list returns empty list.\"\"\"\n    if size <= 0:\n        raise ValueError(\"Size must be greater than 0\")\n    return [lst[i:i + size] for i in range(0, len(lst), size)]",
+      "metadata": {
+        "skill_name": "chunk_list",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 3,
+        "hash": "516c11032858479dcc39028c",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called count_vowels",
+      "completion": "def count_vowels(s):\n    \"\"\"\n    Count the number of vowels (a, e, i, o, u) in a string.\n    \n    Args:\n        s (str): The input string to count vowels from.\n    \n    Returns:\n        int: The total number of vowels found in the string.\n    \"\"\"\n    # Convert the string to lower case for case insensitive comparison\n    s = s.lower()\n    \n    # Initialize a counter variable to store the vowel count\n    count = 0\n    \n    # Iterate over each character in the string\n    for char in s:\n        # Check if the character is a vowel (a, e, i, o, u)\n        if char in 'aeiou':\n            # If it's a vowel, increment the counter\n            count += 1\n    \n    # Return the total vowel count\n    return count",
+      "metadata": {
+        "skill_name": "count_vowels",
+        "version": 1,
+        "model": "llama3.1:8b",
+        "attempt": 1,
+        "hash": "306b9acae2e58011fb2788f8",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called count_words",
+      "completion": "def count_words(s):\n    \"\"\"Count the number of words in a string.\"\"\"\n    return len(s.split())",
+      "metadata": {
+        "skill_name": "count_words",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "b9c1eb769464296299ad7549",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called csv_parser",
+      "completion": "# Your module with multiple functions/classes\ndef parse_csv_line(line, delimiter=','):\n    \"\"\"Parse a CSV line handling quoted fields containing delimiters.\"\"\"\n    result = []\n    field = ''\n    quote_mode = False\n\n    for char in line:\n        if char == '\"':\n            quote_mode = not quote_mode\n        elif char == delimiter and not quote_mode:\n            result.append(strip_quotes(field))\n            field = ''\n        else:\n            field += char\n\n    result.append(strip_quotes(field))\n    return result\n\ndef strip_quotes(field):\n    \"\"\"Remove surrounding quotes from a field.\"\"\"\n    if len(field) >= 2 and field[0] == '\"' and field[-1] == '\"':\n        return field[1:-1]\n    return field",
+      "metadata": {
+        "skill_name": "csv_parser",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 4,
+        "hash": "a23e04252c293182b28978e7",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called dedupe_preserving_order",
+      "completion": "def dedupe_preserving_order(iterable):\n    \"\"\"\n    Remove duplicates from an iterable while preserving the order of first appearance.\n    \n    This function uses a combination of hashability and slower comparison for unhashable elements.\n    \n    :param iterable: The input iterable to remove duplicates from\n    :return: A new list with duplicates removed, preserving the order of first appearance\n    \"\"\"\n    seen = set()\n    result = []\n    for element in iterable:\n        try:\n            # Try to use a hashable version of the element (e.g., frozenset) if it's not already hashable\n            hashed_element = hash(element)\n            if hashed_element not in seen:\n                seen.add(hashed_element)\n                result.append(element)\n        except TypeError:\n            # If the element is unhashable, fall back to slower comparison\n            if element not in seen:\n                seen.add(element)\n                result.append(element)\n    return result",
+      "metadata": {
+        "skill_name": "dedupe_preserving_order",
+        "version": 1,
+        "model": "llama3.1:8b",
+        "attempt": 2,
+        "hash": "7d888e430b5d43f11d1e38fd",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called factorial",
+      "completion": "def factorial(n):\n    \"\"\"Compute the factorial of a non-negative integer.\"\"\"\n    if n < 0:\n        raise ValueError(\"Input must be a non-negative integer\")\n    elif n == 0 or n == 1:\n        return 1\n    else:\n        result = 1\n        for i in range(2, n + 1):\n            result *= i\n        return result",
+      "metadata": {
+        "skill_name": "factorial",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "d7f16ead0c261993403c9f86",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called fibonacci",
+      "completion": "def fibonacci(n):\n    \"\"\"Return the nth Fibonacci number.\"\"\"\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        a, b = 0, 1\n        for _ in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+      "metadata": {
+        "skill_name": "fibonacci",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 2,
+        "hash": "7c82ca7eac80913357385200",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called flatten_list",
+      "completion": "def flatten_list(nested_list):\n    \"\"\"Flatten a nested list of arbitrary depth.\"\"\"\n    result = []\n    for item in nested_list:\n        if isinstance(item, list):\n            result.extend(flatten_list(item))\n        else:\n            result.append(item)\n    return result",
+      "metadata": {
+        "skill_name": "flatten_list",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "8a59fa5a63e723c8b1e97b64",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called gcd",
+      "completion": "def gcd(a, b):\n    \"\"\"Compute the greatest common divisor of two numbers.\"\"\"\n    while b:\n        a, b = b, a % b\n    return a",
+      "metadata": {
+        "skill_name": "gcd",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "6ac99aa6573b48a94581067d",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called is_palindrome",
+      "completion": "def is_palindrome(s):\n    \"\"\"Check if a string is a palindrome.\"\"\"\n    return s == s[::-1]",
+      "metadata": {
+        "skill_name": "is_palindrome",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "8694f547c66bb1f46efebfd2",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called is_prime",
+      "completion": "def is_prime(n):\n    \"\"\"Check if a number is prime.\"\"\"\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True",
+      "metadata": {
+        "skill_name": "is_prime",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "c712ee17faf7304c91662958",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called json_config",
+      "completion": "import json\n\ndef load_config(json_str):\n    \"\"\"Parse JSON string and return a dictionary.\"\"\"\n    try:\n        return json.loads(json_str)\n    except json.JSONDecodeError as e:\n        raise ValueError(f\"Invalid JSON: {e}\")\n\ndef get_value(config, key, default=None):\n    \"\"\"Safely get a nested value using dot notation (e.g. 'a.b.c').\"\"\"\n    keys = key.split('.')\n    for k in keys:\n        if isinstance(config, dict) and k in config:\n            config = config[k]\n        else:\n            return default\n    return config\n\ndef merge_configs(base, override):\n    \"\"\"Deep-merge two dictionaries.\"\"\"\n    result = base.copy()\n    for k, v in override.items():\n        if isinstance(v, dict) and k in result and isinstance(result[k], dict):\n            result[k] = merge_configs(result[k], v)\n        else:\n            result[k] = v\n    return result",
+      "metadata": {
+        "skill_name": "json_config",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 4,
+        "hash": "167c7b8080f5fbf1c387fcb1",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called merge_sorted",
+      "completion": "def merge_sorted(list1, list2):\n    \"\"\"Merge two sorted lists into one sorted list.\"\"\"\n    merged_list = []\n    i, j = 0, 0\n\n    while i < len(list1) and j < len(list2):\n        if list1[i] < list2[j]:\n            merged_list.append(list1[i])\n            i += 1\n        else:\n            merged_list.append(list2[j])\n            j += 1\n\n    while i < len(list1):\n        merged_list.append(list1[i])\n        i += 1\n\n    while j < len(list2):\n        merged_list.append(list2[j])\n        j += 1\n\n    return merged_list",
+      "metadata": {
+        "skill_name": "merge_sorted",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "cdfefc6de24b8d7bf1b5e868",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called output_formatting",
+      "completion": "def output_formatting(word_frequencies, unique_words):\n    \"\"\"Format word frequencies and unique words as JSON.\"\"\"\n    result = {\n        \"word_frequencies\": word_frequencies,\n        \"unique_words\": unique_words\n    }\n    return json.dumps(result)",
+      "metadata": {
+        "skill_name": "output_formatting",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 5,
+        "hash": "c526d9e4955e502be9316ab4",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called parse_duration",
+      "completion": "def parse_duration(s):\n    \"\"\"\n    Parse a duration string like '2h30m', '45s', or '1h' into an integer number of seconds.\n    \n    Args:\n        s (str): A duration string with h, m, and/or s units in any combination.\n        \n    Returns:\n        int: The number of seconds represented by the input string.\n        \n    Raises:\n        ValueError: If the input string is invalid.\n    \"\"\"\n    import re\n    # Regular expression pattern to match one or more digits optionally followed by a unit (h/m/s)\n    pattern = r\"(\\d+)([hms])\"\n    \n    # Find all matches of the pattern in the input string\n    matches = re.findall(pattern, s)\n    \n    # Initialize total seconds to 0\n    total_seconds = 0\n    \n    # Iterate over each match and calculate its contribution to total seconds\n    for value, unit in matches:\n        if unit == 'h':\n            total_seconds += int(value) * 3600\n        elif unit == 'm':\n            total_seconds += int(value) * 60\n        elif unit == 's':\n            total_seconds += int(value)\n    \n    return total_seconds",
+      "metadata": {
+        "skill_name": "parse_duration",
+        "version": 1,
+        "model": "llama3.1:8b",
+        "attempt": 2,
+        "hash": "2e86e3bb4449a0386e0c9460",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called reverse_string",
+      "completion": "def reverse_string(s):\n    \"\"\"Reverses a string.\"\"\"\n    if not isinstance(s, str):\n        raise TypeError(\"Input must be a string\")\n    return s[::-1]",
+      "metadata": {
+        "skill_name": "reverse_string",
+        "version": 1,
+        "model": "llama3.1:8b",
+        "attempt": 5,
+        "hash": "14656f6b773bfdb6ffb67c59",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called reverse_words",
+      "completion": "def reverse_words(sentence):\n    \"\"\"Reverse the order of words in a sentence.\"\"\"\n    return ' '.join(sentence.split()[::-1])",
+      "metadata": {
+        "skill_name": "reverse_words",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "29ccdefe512a5be34e5ee211",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called slugify",
+      "completion": "def slugify(s):\n    \"\"\"Convert a string to a URL-safe slug: lowercase, replace any run of non-alphanumeric characters with a single hyphen, strip leading and trailing hyphens.\"\"\"\n    import re\n    s = s.lower()\n    s = re.sub(r'[^a-z0-9]+', '-', s)\n    s = s.strip('-')\n    return s",
+      "metadata": {
+        "skill_name": "slugify",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 2,
+        "hash": "90f68afc0f16cfb440075885",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called stack_queue",
+      "completion": "# Stack and Queue data structure module\n\nclass Stack:\n    \"\"\"Stack implementation using a list.\"\"\"\n    \n    def __init__(self):\n        self.items = []\n    \n    def push(self, item):\n        \"\"\"Add an item to the top of the stack.\"\"\"\n        self.items.append(item)\n    \n    def pop(self):\n        \"\"\"Remove the item from the top of the stack and return it.\"\"\"\n        if not self.is_empty():\n            return self.items.pop()\n        raise IndexError(\"pop from empty stack\")\n    \n    def peek(self):\n        \"\"\"Return the item at the top of the stack without removing it.\"\"\"\n        if not self.is_empty():\n            return self.items[-1]\n        raise IndexError(\"peek from empty stack\")\n    \n    def is_empty(self):\n        \"\"\"Check if the stack is empty.\"\"\"\n        return len(self.items) == 0\n\nclass Queue:\n    \"\"\"Queue implementation using a list.\"\"\"\n    \n    def __init__(self):\n        self.items = []\n    \n    def enqueue(self, item):\n        \"\"\"Add an item to the end of the queue.\"\"\"\n        self.items.append(item)\n    \n    def dequeue(self):\n        \"\"\"Remove the item from the front of the queue and return it.\"\"\"\n        if not self.is_empty():\n            return self.items.pop(0)\n        raise IndexError(\"dequeue from empty queue\")\n    \n    def front(self):\n        \"\"\"Return the item at the front of the queue without removing it.\"\"\"\n        if not self.is_empty():\n            return self.items[0]\n        raise IndexError(\"front from empty queue\")\n    \n    def is_empty(self):\n        \"\"\"Check if the queue is empty.\"\"\"\n        return len(self.items) == 0\n\ndef stack_queue():\n    \"\"\"One-line docstring.\"\"\"\n    pass",
+      "metadata": {
+        "skill_name": "stack_queue",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 4,
+        "hash": "0f7379f02ea1436763fd30f8",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called sum_even_numbers",
+      "completion": "def sum_even_numbers(numbers):\n    \"\"\"Sum all even numbers in a list of numbers.\"\"\"\n    return sum(num for num in numbers if num % 2 == 0)",
+      "metadata": {
+        "skill_name": "sum_even_numbers",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "21e9c6e53445dc555728f911",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called title_case",
+      "completion": "def title_case(s):\n    \"\"\"Converts a string to title case.\"\"\"\n    return s.title()",
+      "metadata": {
+        "skill_name": "title_case",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "6014f2e72bee5d9bf9c62a47",
+        "type": "promoted_skill"
+      }
+    },
+    {
+      "instruction": "Write a function called word_frequency",
+      "completion": "def word_frequency(text):\n    \"\"\"Count the frequency of each lowercase word in a string, ignoring punctuation.\"\"\"\n    import re\n    from collections import Counter\n\n    # Remove punctuation and convert to lowercase\n    cleaned_text = re.sub(r'[^\\w\\s]', '', text).lower()\n    \n    # Split the text into words\n    words = cleaned_text.split()\n    \n    # Count the frequency of each word\n    freq_dict = dict(Counter(words))\n    \n    return freq_dict",
+      "metadata": {
+        "skill_name": "word_frequency",
+        "version": 1,
+        "model": "qwen2.5-coder:7b",
+        "attempt": 1,
+        "hash": "40c06832233e786f755ce3dc",
+        "type": "promoted_skill"
+      }
+    }
+  ]
+}

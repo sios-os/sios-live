@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "be18e9c085a094c5f3483c9084a51641065d532a2e48215c026b005133b5c43e",
+  "description": "Write a function that converts a camelCase string to snake_case",
+  "evidence": {
+    "duration_s": 0.101,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.10s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: camel_case_string\nactual: this_is_a_test_string\nactual: single_word\nactual: \nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "camel_to_snake",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786666908.0105793,
+    "ledger_seq": 501,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that converts a camelCase string to snake_case"
+  },
+  "version": 1
+}

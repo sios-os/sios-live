@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "d5249b287626bf77560692e9d724d8a88f3bcfef02aca5b6b711ce733382573e",
+  "description": "Write a function that returns the median of a list of numbers",
+  "evidence": {
+    "duration_s": 0.077,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.08s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 3.0\nactual: 30.0\nactual: None\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "median_list",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786667140.5098178,
+    "ledger_seq": 562,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the median of a list of numbers"
+  },
+  "version": 1
+}

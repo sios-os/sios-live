@@ -1,0 +1,30 @@
+{
+  "artifact_hash": "7d888e430b5d43f11d1e38fd2a8c90a78fe05f315ac66e44dd3e1fcb0f14ca3c",
+  "description": "Remove duplicates from a list while preserving the order of first appearance. Must handle unhashable elements by falling back to a slower comparison.",
+  "evidence": {
+    "duration_s": 0.037,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [1, 2, 3, 4, 5]\nactual: ['a', 'b', 'c', 'd']\nactual: [1, 2, 3, 4, 5]\nactual: ['a', 'b', 'c', 'd']\nTESTS PASSED\n"
+  },
+  "name": "dedupe_preserving_order",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786586417.5706782,
+    "ledger_seq": 12,
+    "model": "llama3.1:8b",
+    "reasoning": "",
+    "task": "Remove duplicates from a list while preserving the order of first appearance. Must handle unhashable elements by falling back to a slower comparison."
+  },
+  "version": 1
+}

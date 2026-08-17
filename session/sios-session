@@ -1,0 +1,109 @@
+#!/bin/bash
+# sios-session — Launches the SIOS spatial desktop as an X session.
+#
+# This script is the entry point for the "SIOS" X session. It is executed by
+# the display manager (LightDM) after the user logs in. It:
+#
+#   1. Sets up the environment (minimal, local, no cloud).
+#   2. Starts the ANUBIS daemon in the background.
+#   3. Launches the Godot-based spatial desktop.
+#   4. On exit, stops the daemon and cleans up.
+#
+# The session is designed to work offline. No network access is required.
+
+set -euo pipefail
+
+# ---------------------------------------------------------------- environment
+export XDG_CURRENT_DESKTOP="SIOS"
+export XDG_SESSION_DESKTOP="SIOS"
+export XDG_SESSION_TYPE="x11"
+export DESKTOP_SESSION="SIOS"
+
+# Minimal PATH — no user bin, no snap, no flatpak. The sovereign environment
+# controls what executables are available.
+export PATH="/usr/local/bin:/usr/bin:/bin"
+
+# Python path for the ANUBIS runtime
+export PYTHONPATH="/opt/sios-live:${PYTHONPATH:-}"
+
+# ANUBIS model configuration
+export ANUBIS_MODEL="${ANUBIS_MODEL:-qwen2.5-coder:7b}"
+export ANUBIS_OLLAMA="${ANUBIS_OLLAMA:-http://127.0.0.1:11434}"
+
+# Prevent Python from writing bytecode or looking in user site
+export PYTHONDONTWRITEBYTECODE="1"
+export PYTHONNOUSERSITE="1"
+
+# Locale
+export LC_ALL="C.UTF-8"
+export LANG="C.UTF-8"
+
+# ----------------------------------------------------------------- paths
+SIOS_ROOT="/opt/sios-live"
+SIOS_DESKTOP="/opt/sios-live/desktop"
+ANUBIS_LOG="/var/log/sios/anubis-daemon.log"
+SESSION_LOG="/var/log/sios/session.log"
+PIDFILE_ANUBIS="/run/sios-anubis.pid"
+
+mkdir -p /var/log/sios /run
+
+# ----------------------------------------------------------------- cleanup
+cleanup() {
+    echo "[$(date -Iseconds)] SIOS session ending" >> "$SESSION_LOG"
+    if [ -f "$PIDFILE_ANUBIS" ]; then
+        kill "$(cat "$PIDFILE_ANUBIS")" 2>/dev/null || true
+        rm -f "$PIDFILE_ANUBIS"
+    fi
+}
+trap cleanup EXIT INT TERM
+
+# ----------------------------------------------------------------- daemon
+start_anubis_daemon() {
+    if [ -f "$PIDFILE_ANUBIS" ] && kill -0 "$(cat "$PIDFILE_ANUBIS")" 2>/dev/null; then
+        echo "[$(date -Iseconds)] ANUBIS daemon already running" >> "$SESSION_LOG"
+        return 0
+    fi
+
+    # Check if Ollama is running
+    if ! curl -s --max-time 3 "$ANUBIS_OLLAMA/api/version" >/dev/null 2>&1; then
+        echo "[$(date -Iseconds)] WARNING: Ollama not reachable at $ANUBIS_OLLAMA" >> "$SESSION_LOG"
+        echo "[$(date -Iseconds)] ANUBIS will start in degraded mode (no live model)" >> "$SESSION_LOG"
+    fi
+
+    # Start the daemon
+    echo "[$(date -Iseconds)] Starting ANUBIS daemon..." >> "$SESSION_LOG"
+    python3 "$SIOS_ROOT/tools/anubis_daemon.py" >> "$ANUBIS_LOG" 2>&1 &
+    local pid=$!
+    echo "$pid" > "$PIDFILE_ANUBIS"
+    echo "[$(date -Iseconds)] ANUBIS daemon started (pid=$pid)" >> "$SESSION_LOG"
+}
+
+# ----------------------------------------------------------------- launch
+echo "[$(date -Iseconds)] SIOS session starting for user $(whoami)" >> "$SESSION_LOG"
+echo "[$(date -Iseconds)] Desktop: $SIOS_DESKTOP" >> "$SESSION_LOG"
+echo "[$(date -Iseconds)] Model: $ANUBIS_MODEL" >> "$SESSION_LOG"
+echo "[$(date -Iseconds)] Knowledge: 550 docs, 15677 claims, 13 skills" >> "$SESSION_LOG"
+
+start_anubis_daemon
+
+# Wait for the daemon socket to be ready (max 15 seconds)
+echo "[$(date -Iseconds)] Waiting for ANUBIS daemon..." >> "$SESSION_LOG"
+for i in $(seq 1 15); do
+    if [ -S /tmp/anubis.sock ]; then
+        echo "[$(date -Iseconds)] ANUBIS daemon ready" >> "$SESSION_LOG"
+        break
+    fi
+    sleep 1
+done
+
+# Launch the Godot desktop
+# The desktop is the entire session — there is no window manager.
+# Godot runs fullscreen and handles all input.
+echo "[$(date -Iseconds)] Launching SIOS spatial desktop..." >> "$SESSION_LOG"
+
+# Export the desktop project if a binary exists, otherwise run from source
+if [ -x "/opt/sios-desktop/sios-desktop.x86_64" ]; then
+    exec /opt/sios-desktop/sios-desktop.x86_64 --main-pack /opt/sios-desktop/sios-desktop.pck
+else
+    exec godot --path "$SIOS_DESKTOP" --fullscreen
+fi

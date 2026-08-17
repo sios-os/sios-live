@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "7c82ca7eac809133573852001b5ae5d279f8b283bf46e2c0ea4895bfa2eb9a62",
+  "description": "Write a function that returns the nth Fibonacci number",
+  "evidence": {
+    "duration_s": 0.025,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.03s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 55\nactual: 1\nactual: 0\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "fibonacci",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786658104.6292555,
+    "ledger_seq": 214,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the nth Fibonacci number"
+  },
+  "version": 1
+}

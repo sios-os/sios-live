@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "da258a283046e37a3aab5280a62f24fa6fdbbc452f33d2a645afcb15addb6622",
+  "description": "Write a function that converts between meters, kilometers, miles, and feet given a value, from_unit, and to_unit",
+  "evidence": {
+    "duration_s": 0.497,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.50s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 0.01\nactual: 5\ncaught expected error: Invalid unit conversion\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "distance_convert",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786669448.6012146,
+    "ledger_seq": 734,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that converts between meters, kilometers, miles, and feet given a value, from_unit, and to_unit"
+  },
+  "version": 1
+}

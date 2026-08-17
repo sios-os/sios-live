@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "c6baa0c6f0d2d11e1947cdc92076d3dea5c6e12437c9827a15df52cd7b5761a6",
+  "description": "Write a function that returns the prime factors of a number as a list",
+  "evidence": {
+    "duration_s": 0.045,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.05s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [2, 3, 3]\nactual: [2, 2, 5, 5]\nactual: [13]\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "prime_factors",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786666337.9543996,
+    "ledger_seq": 401,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the prime factors of a number as a list"
+  },
+  "version": 1
+}

@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "702db19029632da489113b276488075e2750afd7c315641e9fe64971a576e687",
+  "description": "Write a function int_to_ip(n) that converts an integer to an IPv4 address string. Example: 167772161 -> '10.0.0.1'. Extract each octet by shifting and masking.",
+  "evidence": {
+    "duration_s": 0.059,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.06s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 10.0.0.1\nactual: 0.0.0.0\nactual: 255.255.255.255\nactual: 0.0.0.1\nactual: 0.0.1.0\nactual: 255.255.255.254\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "int_to_ip",
+  "provenance": {
+    "attempt": 5,
+    "created_at": 1786659578.606628,
+    "ledger_seq": 337,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function int_to_ip(n) that converts an integer to an IPv4 address string. Example: 167772161 -> '10.0.0.1'. Extract each octet by shifting and masking."
+  },
+  "version": 1
+}

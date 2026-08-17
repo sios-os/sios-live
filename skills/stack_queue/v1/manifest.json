@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "0f7379f02ea1436763fd30f8ebc64ca97f8c3337454ebb90dac3b0c8dacf1514",
+  "description": "Build a Stack and Queue data structure module. Implement a `Stack` class with push, pop, peek, and is_empty methods. Implement a `Queue` class with enqueue, dequeue, front, and is_empty methods. Test both classes thoroughly.",
+  "evidence": {
+    "duration_s": 0.041,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 3\nactual: a\nactual: 2\nactual: a\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "stack_queue",
+  "provenance": {
+    "attempt": 4,
+    "created_at": 1786597370.187553,
+    "ledger_seq": 142,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Build a Stack and Queue data structure module. Implement a `Stack` class with push, pop, peek, and is_empty methods. Implement a `Queue` class with enqueue, dequeue, front, and is_empty methods. Test both classes thoroughly."
+  },
+  "version": 1
+}

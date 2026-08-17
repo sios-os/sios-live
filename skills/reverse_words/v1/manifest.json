@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "29ccdefe512a5be34e5ee211b4348bcfc3e5bf0f0768bc8cfe236cd453f656a0",
+  "description": "Write a function that reverses the order of words in a sentence",
+  "evidence": {
+    "duration_s": 0.047,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.05s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: World Hello\nactual: five four three two one\nactual: \nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "reverse_words",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786658132.0351877,
+    "ledger_seq": 227,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that reverses the order of words in a sentence"
+  },
+  "version": 1
+}

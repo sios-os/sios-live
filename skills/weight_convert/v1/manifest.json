@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "962c6cadfe604f6b14942b9f4e9c30e7e03ac3c50bfe2c987c8f265a1bd27d32",
+  "description": "Write a function that converts between kilograms, grams, pounds, and ounces given a value, from_unit, and to_unit",
+  "evidence": {
+    "duration_s": 0.82,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.82s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 1000\nactual: 5\ncaught expected ValueError: Invalid unit conversion\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "weight_convert",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786669594.925514,
+    "ledger_seq": 738,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that converts between kilograms, grams, pounds, and ounces given a value, from_unit, and to_unit"
+  },
+  "version": 1
+}

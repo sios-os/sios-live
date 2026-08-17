@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "60a5c660103d7e37908becbe1e2fb315c744f09898d76e3a637454ae37bd3c1f",
+  "description": "Write a function that takes two lists and returns a dict mapping keys to values",
+  "evidence": {
+    "duration_s": 0.075,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.08s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: {'a': 1, 'b': 2, 'c': 3}\nactual: {}\nactual: {'x': 42}\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "zip_dicts",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667456.3396797,
+    "ledger_seq": 635,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that takes two lists and returns a dict mapping keys to values"
+  },
+  "version": 1
+}

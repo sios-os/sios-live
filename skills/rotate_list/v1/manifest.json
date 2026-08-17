@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "099ebafdc05d7dab31ab60d4f30970b8fb329fb35f25efd1d63892906c3c38e3",
+  "description": "Write a function that rotates a list by n positions (positive = right, negative = left)",
+  "evidence": {
+    "duration_s": 0.055,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.06s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [4, 5, 1, 2, 3]\nactual: [3, 4, 5, 1, 2]\nactual: [4, 5, 1, 2, 3]\nactual: []\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "rotate_list",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667392.5372584,
+    "ledger_seq": 615,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that rotates a list by n positions (positive = right, negative = left)"
+  },
+  "version": 1
+}

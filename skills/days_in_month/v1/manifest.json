@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "c89bafb6bbd60fef7c98580e841cd4915800c68ee56b2ef32200071a025a3644",
+  "description": "Write a function that returns the number of days in a given month and year",
+  "evidence": {
+    "duration_s": 0.037,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 29\nactual: 28\nactual: 30\nactual: 31\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "days_in_month",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786666399.1969807,
+    "ledger_seq": 425,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the number of days in a given month and year"
+  },
+  "version": 1
+}

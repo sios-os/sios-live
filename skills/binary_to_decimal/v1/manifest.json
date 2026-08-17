@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "aa4cb322073f3ba65c78f76f76bbae8b4a795c0efe60a45ad598e57aab79a744",
+  "description": "Write a function that converts a binary string to a decimal integer",
+  "evidence": {
+    "duration_s": 0.071,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.07s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 0\nactual: 1\nactual: 10\nactual: 255\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "binary_to_decimal",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786666359.478231,
+    "ledger_seq": 409,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that converts a binary string to a decimal integer"
+  },
+  "version": 1
+}

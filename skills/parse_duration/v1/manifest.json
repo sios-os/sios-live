@@ -1,0 +1,30 @@
+{
+  "artifact_hash": "2e86e3bb4449a0386e0c946034b5fde699503eed781e573dd0ee8864e64de0c8",
+  "description": "Parse a duration string like '2h30m', '45s', or '1h' into an integer number of seconds. Support h, m, and s units in any combination. Raise ValueError on invalid input.",
+  "evidence": {
+    "duration_s": 0.045,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 9000\nactual: 45\nactual: 3600\nactual: 0\nTESTS PASSED\n"
+  },
+  "name": "parse_duration",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786586465.9544635,
+    "ledger_seq": 17,
+    "model": "llama3.1:8b",
+    "reasoning": "",
+    "task": "Parse a duration string like '2h30m', '45s', or '1h' into an integer number of seconds. Support h, m, and s units in any combination. Raise ValueError on invalid input."
+  },
+  "version": 1
+}

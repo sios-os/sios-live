@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "92d93c9e1aff37ad4d29ea1b506e60c08f8a16818313cdf237b6b0567610ec3a",
+  "description": "Write a function that validates whether a string is a valid IPv4 address",
+  "evidence": {
+    "duration_s": 2.392,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 2.39s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: True\nactual: False\nactual: False\nactual: True\nactual: False\nactual: False\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "validate_ip_address",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667741.8199282,
+    "ledger_seq": 693,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that validates whether a string is a valid IPv4 address"
+  },
+  "version": 1
+}

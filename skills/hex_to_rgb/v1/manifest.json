@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "90c4e6f30a8918f70d1a115ae84b4081ffe91a027787d47ceab8f9f36f2de127",
+  "description": "Write a function that converts a hex color string to an RGB tuple",
+  "evidence": {
+    "duration_s": 0.062,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.06s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: (255, 255, 255)\nactual: (0, 0, 0)\nactual: (255, 170, 187)\nactual: Invalid hex color format\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "hex_to_rgb",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786659296.8855376,
+    "ledger_seq": 301,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that converts a hex color string to an RGB tuple"
+  },
+  "version": 1
+}

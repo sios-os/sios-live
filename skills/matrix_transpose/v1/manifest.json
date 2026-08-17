@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "e6eb6c5754d3dd0bd07b025f4db55dbd548da7e2bc4a0dfe5edbdddfa60c6b13",
+  "description": "Write a function that transposes a 2D matrix",
+  "evidence": {
+    "duration_s": 0.126,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.13s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [[1, 2], [3, 4]]\nactual: [[1, 2, 3], [4, 5, 6]]\nactual: []\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "matrix_transpose",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786659127.1244652,
+    "ledger_seq": 272,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that transposes a 2D matrix"
+  },
+  "version": 1
+}

@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "0bac590da5d593094168969c456133f86e5c07a232ded297d530632ae313ddc0",
+  "description": "Write a function that returns the first n Fibonacci numbers as a list",
+  "evidence": {
+    "duration_s": 0.094,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.09s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [0, 1, 1, 2, 3]\nactual: [0]\nactual: []\nactual: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "fibonacci_sequence",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786666325.56087,
+    "ledger_seq": 397,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the first n Fibonacci numbers as a list"
+  },
+  "version": 1
+}

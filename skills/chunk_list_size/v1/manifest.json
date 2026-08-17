@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "2f457807d25892d6e13b9887b3db1b6d0a3d15c86d0d173e1e81c36c9df889b1",
+  "description": "Write a function that splits a list into chunks of a given size, returning a list of lists",
+  "evidence": {
+    "duration_s": 0.138,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.14s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [[1, 2], [3, 4], [5]]\nactual: []\nactual: Size must be greater than 0\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "chunk_list_size",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667365.5148,
+    "ledger_seq": 607,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that splits a list into chunks of a given size, returning a list of lists"
+  },
+  "version": 1
+}

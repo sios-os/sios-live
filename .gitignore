@@ -1,0 +1,32 @@
+# Credentials and secrets — never commit
+config/cloud_credentials.json
+config/wg0-client.conf
+identity/
+*.enc
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Build artifacts
+*.iso
+backups/
+sios-ubuntu-*.iso
+
+# Large model files — never commit
+*.gguf
+*.bin
+*.safetensors
+models/
+training_output/
+memory/custom_embed_model.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

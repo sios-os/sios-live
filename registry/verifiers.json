@@ -1,0 +1,86 @@
+[
+  {
+    "verifier_id": "v_evidence",
+    "name": "Evidence and Citation Verifier",
+    "description": "Checks that claims have supporting evidence and accurate citations",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_logic",
+    "name": "Logic and Contradiction Reviewer",
+    "description": "Detects logical errors and contradictions between claims",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_stats",
+    "name": "Statistical Methods Reviewer",
+    "description": "Validates statistical methods and interpretations",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_security",
+    "name": "Security Reviewer",
+    "description": "Checks for security vulnerabilities and attack vectors",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_privacy",
+    "name": "Privacy Reviewer",
+    "description": "Ensures privacy minimization and data protection",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_constitutional",
+    "name": "Constitutional and Ethics Reviewer",
+    "description": "Checks constitutional compliance and ethical boundaries",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_legal",
+    "name": "Legal and Licensing Reviewer",
+    "description": "Verifies license compliance and legal restrictions",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_safety",
+    "name": "Safety and Hazard Reviewer",
+    "description": "Identifies safety hazards and required precautions",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_accessibility",
+    "name": "Accessibility Reviewer",
+    "description": "Ensures accessibility compliance",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_cost",
+    "name": "Cost and Resource Analyst",
+    "description": "Evaluates computational and financial costs",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_reproducibility",
+    "name": "Reproducibility Verifier",
+    "description": "Checks that results can be independently reproduced",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_adversarial",
+    "name": "Adversarial Critic",
+    "description": "Challenges claims from opposing viewpoints",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_qc",
+    "name": "Quality-control Reviewer",
+    "description": "General quality assessment and completeness checks",
+    "checks": []
+  },
+  {
+    "verifier_id": "v_uncertainty",
+    "name": "Uncertainty and Calibration Auditor",
+    "description": "Assesses confidence calibration and uncertainty reporting",
+    "checks": []
+  }
+]

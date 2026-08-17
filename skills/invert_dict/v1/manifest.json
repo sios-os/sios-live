@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "3dd5b300eb30fd792e95882f1d7c7c4c9a5619f572ed6882c37dee51f9d9eb13",
+  "description": "Write a function that inverts a dictionary (keys become values and vice versa)",
+  "evidence": {
+    "duration_s": 0.039,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: {1: 'a', 2: 'b'}\nactual: {}\nactual: {'a': 1, 'b': 2, 'c': 3}\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "invert_dict",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667465.258826,
+    "ledger_seq": 639,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that inverts a dictionary (keys become values and vice versa)"
+  },
+  "version": 1
+}

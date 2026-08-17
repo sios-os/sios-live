@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "64a2189606cd3b89438e21e80acc6a88e709f4d60e925bc4b03f49ed1c62ca10",
+  "description": "Write a function that returns the number of Collatz conjecture steps to reach 1",
+  "evidence": {
+    "duration_s": 0.027,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.03s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 0\nactual: 8\nactual: 16\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "collatz_steps",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786665295.9836292,
+    "ledger_seq": 384,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the number of Collatz conjecture steps to reach 1"
+  },
+  "version": 1
+}

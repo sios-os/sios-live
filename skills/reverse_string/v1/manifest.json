@@ -1,0 +1,30 @@
+{
+  "artifact_hash": "14656f6b773bfdb6ffb67c592137755a7fe1fb6af779259e37a4527105bb5aa2",
+  "description": "Reverse a string. The function must accept str and return the reversed string. Handle empty string and unicode characters.",
+  "evidence": {
+    "duration_s": 0.025,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "sandbox_summary": "ok exit=0 0.02s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: \nactual: a\nactual: oell h A\nTESTS PASSED\n"
+  },
+  "name": "reverse_string",
+  "provenance": {
+    "attempt": 5,
+    "created_at": 1786586355.378006,
+    "ledger_seq": 0,
+    "model": "llama3.1:8b",
+    "reasoning": "",
+    "task": "Reverse a string. The function must accept str and return the reversed string. Handle empty string and unicode characters."
+  },
+  "version": 1
+}

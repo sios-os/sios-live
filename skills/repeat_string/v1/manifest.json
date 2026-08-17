@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "2d0d175489c2e7738c332f98901993f6e804995cb7c96b9d35e62a547b5c14a0",
+  "description": "Write a function that repeats a string n times with a separator between each repetition",
+  "evidence": {
+    "duration_s": 0.421,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.42s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: hello, hello, hello\nactual: world\nactual: \nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "repeat_string",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786669664.711416,
+    "ledger_seq": 742,
+    "model": "qwen2.5-coder:14b",
+    "reasoning": "",
+    "task": "Write a function that repeats a string n times with a separator between each repetition"
+  },
+  "version": 1
+}

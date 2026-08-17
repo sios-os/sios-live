@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "7f03ab3c3e83bbc75f93ea23db619c755482b3eb1d1a67ba8def4154860bdce7",
+  "description": "Write a function that sorts a list using bubble sort",
+  "evidence": {
+    "duration_s": 0.042,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [11, 12, 22, 25, 34, 64, 90]\nactual: []\nactual: [1]\nactual: [1, 2, 3]\nactual: [1, 2, 3]\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "bubble_sort",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786659055.7882817,
+    "ledger_seq": 255,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that sorts a list using bubble sort"
+  },
+  "version": 1
+}

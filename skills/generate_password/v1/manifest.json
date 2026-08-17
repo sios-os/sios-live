@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "4ff932bcca38d45dd575e9a7235ca0a06032b847d84da71fc23a2bf4b7406728",
+  "description": "Write a function that generates a random password of a given length with optional special characters",
+  "evidence": {
+    "duration_s": 0.139,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.14s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: ZbY2es2s\nactual: ?*FI\"`(f_L>8\nactual: Length must be greater than 0\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "generate_password",
+  "provenance": {
+    "attempt": 3,
+    "created_at": 1786667831.9924693,
+    "ledger_seq": 705,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that generates a random password of a given length with optional special characters"
+  },
+  "version": 1
+}

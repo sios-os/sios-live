@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "4ec2d689167095959cd8d27a5931a1502cf0208a426ddd565b85f24ff14d8e39",
+  "description": "Write a function that returns the average of a list of numbers",
+  "evidence": {
+    "duration_s": 0.067,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.07s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 3.0\nactual: 0\nactual: 0.0\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "average_list",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667116.582325,
+    "ledger_seq": 558,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that returns the average of a list of numbers"
+  },
+  "version": 1
+}

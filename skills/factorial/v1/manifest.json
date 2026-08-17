@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "d7f16ead0c261993403c9f862ba9e465a9b10f9b6a92be364e881d22a29b23a0",
+  "description": "Write a function that computes the factorial of a non-negative integer",
+  "evidence": {
+    "duration_s": 0.032,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.03s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 120\nactual: 1\nactual: Input must be a non-negative integer\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "factorial",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786658085.5665243,
+    "ledger_seq": 210,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that computes the factorial of a non-negative integer"
+  },
+  "version": 1
+}

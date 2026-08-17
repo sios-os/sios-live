@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "8e522d64580a09a0533f51ea45d541e5432db8420938a7fe83c804e37f7559ac",
+  "description": "Write a function that validates an email address format without using regex",
+  "evidence": {
+    "duration_s": 0.041,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: True\nactual: True\nactual: False\nactual: False\nactual: False\nactual: False\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "validate_email",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786659217.845513,
+    "ledger_seq": 287,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that validates an email address format without using regex"
+  },
+  "version": 1
+}

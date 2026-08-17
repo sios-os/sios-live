@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "ce42ba6845b25212f1a73ce2cd29af72b935b28148734a949ffa17facc205493",
+  "description": "Write a function that sums the digits of an integer",
+  "evidence": {
+    "duration_s": 0.071,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.07s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 6\nactual: 15\nactual: 0\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "sum_of_digits",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786665272.3676126,
+    "ledger_seq": 380,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that sums the digits of an integer"
+  },
+  "version": 1
+}

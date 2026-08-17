@@ -1,0 +1,17 @@
+[Unit]
+Description=SIOS First-Boot Model Pull
+After=ollama.service
+Requires=ollama.service
+ConditionPathExists=!/var/lib/sios/.first-boot-models-done
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/sios-first-boot.sh
+RemainAfterExit=yes
+User=root
+Environment=ANUBIS_MODEL=qwen2.5-coder:7b
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

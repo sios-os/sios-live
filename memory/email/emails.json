@@ -1,0 +1,19 @@
+{
+  "ab32f8997b6bf624": {
+    "email_id": "ab32f8997b6bf624",
+    "subject": "Welcome to Mail Basic",
+    "sender": "support@ionos.com",
+    "sender_name": "IONOS Customer Service",
+    "recipients": [],
+    "date": 1786922694.4740233,
+    "body": "Welcome to Mail Basic\r\n\r\nDear Customer,\r\n\r\nThank you for choosing IONOS. We have now set up a Mail Basic mailbox for you.\r\n\r\nTo use Mail Basic, simply log in to Webmail with your email address and password.\r\n\r\nTo Webmail\r\nhttps://my.ionos.com\r\n\r\nTo manage your Mail Basic account, please log in to IONOS (https://my.ionos.com/email-overview).\r\n\r\nFurther information about Mail Basic (https://www.ionos.com/help/index.php?id=2497)\r\n\r\nBest wishes,\r\n\r\nJens Reich\r\nCCO IONOS\r\n\r\n\r\n\u00a9 2026 IONOS Inc. All ri",
+    "category": "inbox",
+    "priority": "normal",
+    "read": false,
+    "flagged": false,
+    "attachments": [],
+    "thread_id": "",
+    "phishing_score": 0.0,
+    "phishing_indicators": []
+  }
+}

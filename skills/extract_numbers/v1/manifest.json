@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "67495dca89a01f4e80b11fbe045e984e040a8b46c7a754a8ed679b753e6f687f",
+  "description": "Write a function that extracts all numbers from a string and returns them as a list of floats",
+  "evidence": {
+    "duration_s": 0.124,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.12s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [123.0, 45.67, 89.0]\nactual: []\nactual: [0.1, 2.3, 4.0]\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "extract_numbers",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667720.3756495,
+    "ledger_seq": 689,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that extracts all numbers from a string and returns them as a list of floats"
+  },
+  "version": 1
+}

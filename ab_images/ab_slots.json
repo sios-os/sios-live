@@ -1,0 +1,27 @@
+{
+  "slots": [
+    {
+      "slot_id": "A",
+      "version": "",
+      "image_hash": "",
+      "status": "ACTIVE",
+      "installed_at": 1786604090.234801,
+      "last_booted": 0.0,
+      "boot_count": 0,
+      "probation_until": 0.0,
+      "notes": ""
+    },
+    {
+      "slot_id": "B",
+      "version": "",
+      "image_hash": "",
+      "status": "INACTIVE",
+      "installed_at": 0.0,
+      "last_booted": 0.0,
+      "boot_count": 0,
+      "probation_until": 0.0,
+      "notes": ""
+    }
+  ],
+  "history": []
+}

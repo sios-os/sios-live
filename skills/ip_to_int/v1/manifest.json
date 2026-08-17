@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "18bc1be5c357dbfe29bade10e4769a204ffb8f842553930bb12ecbbd7088b9fc",
+  "description": "Write a function that converts an IPv4 address string to an integer",
+  "evidence": {
+    "duration_s": 0.102,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.10s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 3232235777\nactual: 0\nactual: Invalid IPv4 address\nactual: Invalid IPv4 address\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "ip_to_int",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786659235.054983,
+    "ledger_seq": 292,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that converts an IPv4 address string to an integer"
+  },
+  "version": 1
+}

@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "a99111e6a71358301c1f5ee0c92059e8284c92554994494bf236bc9b6024e7e6",
+  "description": "Write a function that encodes a string using a Caesar cipher with a given shift",
+  "evidence": {
+    "duration_s": 0.083,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.08s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: khoor\nactual: Mjqqt, Btwqi!\nactual: 123\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "caesar_cipher",
+  "provenance": {
+    "attempt": 3,
+    "created_at": 1786659161.1903238,
+    "ledger_seq": 277,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that encodes a string using a Caesar cipher with a given shift"
+  },
+  "version": 1
+}

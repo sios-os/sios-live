@@ -1,0 +1,78 @@
+; SIOS Desktop — Godot 4 project
+; A unified spatial desktop environment for the SIOS sovereign operating system.
+; All 13 rooms are built procedurally with optional GLB enhancement.
+config_version=5
+
+[application]
+
+config/name="SIOS Desktop"
+config/description="Sovereign Interactive Operating System — spatial desktop environment"
+run/main_scene="res://scenes/boot.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+SIOSBrand="*res://scripts/SIOSBrand.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.031, 0.027, 0.02, 1)
+anti_aliasing/quality/msaa_3d=2
+
+[input]
+
+next_station={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":4110)]
+}
+previous_station={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":4111)]
+}
+interact={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":69)]
+}
+toggle_safe_mode={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":4114)]
+}
+toggle_reduced_motion={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":77)]
+}
+invoke_demon={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":68)]
+}
+toggle_anubis_speech={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":32)]
+}
+toggle_anubis_thinking={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":84)]
+}
+show_system_activity={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":81)]
+}
+portal_travel={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":70)]
+}
+return_to_hub={
+"deadzone": 0.2,
+"events": [Object(InputEventKey, "physical_keycode":4194305)]
+}

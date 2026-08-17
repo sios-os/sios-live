@@ -1,0 +1,30 @@
+{
+  "artifact_hash": "516c11032858479dcc39028cf3e0dbad4deb559feecdecf893cc4734bb870db0",
+  "description": "Split a list into chunks of a given size. Return a list of lists. The last chunk may be smaller than size. If size <= 0, raise ValueError. Empty input list returns empty list.",
+  "evidence": {
+    "duration_s": 0.077,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "sandbox_summary": "ok exit=0 0.08s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [[1, 2], [3, 4], [5, 6], [7]]\nactual: [[1, 2, 3], [4, 5, 6], [7]]\nactual: [[1, 2, 3, 4, 5, 6, 7]]\nactual: []\nactual: [[1]]\nactual: Size must be greater than 0\nTESTS PASSED\n"
+  },
+  "name": "chunk_list",
+  "provenance": {
+    "attempt": 3,
+    "created_at": 1786595924.8216434,
+    "ledger_seq": 38,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Split a list into chunks of a given size. Return a list of lists. The last chunk may be smaller than size. If size <= 0, raise ValueError. Empty input list returns empty list."
+  },
+  "version": 1
+}

@@ -1,0 +1,12 @@
+{
+  "daily_limit": 50.0,
+  "weekly_limit": 200.0,
+  "monthly_limit": 1000.0,
+  "currency": "USD",
+  "prohibited_categories": [
+    "gambling",
+    "weapons",
+    "illegal_drugs",
+    "cryptocurrency_speculation"
+  ]
+}

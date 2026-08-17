@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "c8a0d1899877a8dfa83ca3a1830914d36ea1428f95a9e102fc8ceb4bfa446651",
+  "description": "Write a function that filters a dict to only entries where the value satisfies a predicate",
+  "evidence": {
+    "duration_s": 0.09,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.09s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: {'b': 2, 'c': 3}\nactual: {'y': 10}\nactual: {'q': 'banana', 'r': 'cherry'}\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "filter_dict_by_value",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786667531.1022398,
+    "ledger_seq": 653,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that filters a dict to only entries where the value satisfies a predicate"
+  },
+  "version": 1
+}

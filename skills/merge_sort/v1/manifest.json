@@ -1,0 +1,33 @@
+{
+  "artifact_hash": "de46988f3691441c4835f68b60bbec50a15c05a61771622745689deaa7433bcd",
+  "description": "Write a function that sorts a list using merge sort",
+  "evidence": {
+    "duration_s": 0.055,
+    "file_count": 1,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "multi_file": false,
+    "sandbox_summary": "ok exit=0 0.05s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: [1, 1, 2, 3, 3, 4, 5, 5, 5, 6, 9]\nactual: []\nactual: [7]\nactual: [-9, -6, -5, -5, -5, -4, -3, -3, -2, -1, -1]\nTESTS PASSED\n"
+  },
+  "files": {},
+  "name": "merge_sort",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786659083.4774294,
+    "ledger_seq": 263,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Write a function that sorts a list using merge sort"
+  },
+  "version": 1
+}

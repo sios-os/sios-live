@@ -1,0 +1,30 @@
+{
+  "artifact_hash": "90f68afc0f16cfb440075885a94b03538e5101f45f7090c178846afea287dc21",
+  "description": "Convert a string to a URL-safe slug: lowercase, replace any run of non-alphanumeric characters with a single hyphen, strip leading and trailing hyphens. Empty string returns empty string.",
+  "evidence": {
+    "duration_s": 0.041,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "sandbox_summary": "ok exit=0 0.04s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: hello-world\nactual: leading-and-trailing-hyphens\nactual: \nactual: 123\nactual: leading-and-trailing\nTESTS PASSED\n"
+  },
+  "name": "slugify",
+  "provenance": {
+    "attempt": 2,
+    "created_at": 1786595836.8226507,
+    "ledger_seq": 22,
+    "model": "qwen2.5-coder:7b",
+    "reasoning": "",
+    "task": "Convert a string to a URL-safe slug: lowercase, replace any run of non-alphanumeric characters with a single hyphen, strip leading and trailing hyphens. Empty string returns empty string."
+  },
+  "version": 1
+}

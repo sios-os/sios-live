@@ -1,0 +1,30 @@
+{
+  "artifact_hash": "306b9acae2e58011fb2788f8be7299a7423c7c3f4ebc3d11a406e6eb407d4485",
+  "description": "Count the number of vowels (a, e, i, o, u) in a string. Case insensitive. Return an integer count.",
+  "evidence": {
+    "duration_s": 0.027,
+    "fully_isolated": true,
+    "isolation": {
+      "cpu_capped": true,
+      "filesize_capped": true,
+      "host_mounts_masked": true,
+      "isolated_cwd": true,
+      "memory_capped": true,
+      "network_blocked": true,
+      "timeout_armed": true,
+      "unprivileged": true
+    },
+    "sandbox_summary": "ok exit=0 0.03s isolation=[network_blocked,host_mounts_masked,unprivileged,memory_capped,cpu_capped,filesize_capped,timeout_armed,isolated_cwd]",
+    "stdout_tail": "actual: 3\nactual: 0\nactual: 10\nTESTS PASSED\n"
+  },
+  "name": "count_vowels",
+  "provenance": {
+    "attempt": 1,
+    "created_at": 1786586372.274712,
+    "ledger_seq": 8,
+    "model": "llama3.1:8b",
+    "reasoning": "",
+    "task": "Count the number of vowels (a, e, i, o, u) in a string. Case insensitive. Return an integer count."
+  },
+  "version": 1
+}
