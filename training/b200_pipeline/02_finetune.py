@@ -104,19 +104,33 @@ def fine_tune_unsloth(generation: int, data_path: Path):
     output_path = OUTPUT_DIR / f"anubis_v{generation}"
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Load model with Unsloth — full fine-tune (not LoRA)
-    # For full fine-tune, we set max_seq_length and load in bf16
-    log("finetune", f"Loading {BASE_MODEL} with Unsloth...")
+    # Load model with Unsloth — 4-bit quantized for 94GB VRAM
+    # 32B model in bf16 needs ~128GB VRAM for full fine-tune, but H100 NVL has 94GB.
+    # Using 4-bit quantization reduces model to ~20GB, leaving room for optimizer + activations.
+    log("finetune", f"Loading {BASE_MODEL} with Unsloth (4-bit)...")
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=BASE_MODEL,
         max_seq_length=config["max_seq_length"],
         dtype=torch.bfloat16,
-        load_in_4bit=False,  # Full precision for full fine-tune
-        full_finetuning=True,  # Enable full fine-tuning
+        load_in_4bit=True,  # 4-bit quantization to fit in 94GB VRAM
+        full_finetuning=False,  # Use LoRA adapters on top of 4-bit base
+    )
+
+    # Add LoRA adapters for efficient fine-tuning
+    model = FastLanguageModel.get_peft_model(
+        model,
+        r=64,  # LoRA rank
+        target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                        "gate_proj", "up_proj", "down_proj"],
+        lora_alpha=128,
+        lora_dropout=0.05,
+        bias="none",
+        use_gradient_checkpointing="unsloth",
+        random_state=42,
     )
 
     vram_gb = torch.cuda.memory_allocated() / 1e9
-    log("finetune", "Model loaded", vram_gb=vram_gb)
+    log("finetune", "Model loaded with LoRA adapters", vram_gb=vram_gb)
 
     # Load and prepare dataset
     pairs = load_dataset(data_path)
