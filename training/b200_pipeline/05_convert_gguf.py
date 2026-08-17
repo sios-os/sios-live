@@ -46,7 +46,13 @@ def convert_to_gguf(model_path: Path, output_dir: Path):
         import json as _json
         adapter_cfg = _json.loads(adapter_config.read_text())
         base_model_name = adapter_cfg.get("base_model_name_or_path", "Qwen/Qwen2.5-32B-Instruct")
-        log("convert", f"Base model: {base_model_name}")
+
+        # Override 4-bit quantized base with original full-precision model
+        if "bnb-4bit" in base_model_name or "4bit" in base_model_name:
+            base_model_name = "Qwen/Qwen2.5-32B-Instruct"
+            log("convert", f"Overriding 4-bit base with full-precision: {base_model_name}")
+        else:
+            log("convert", f"Base model: {base_model_name}")
 
         # Merge LoRA into base model — must load in full bf16, not 4-bit
         merged_path = output_dir / "anubis_v3_merged"
