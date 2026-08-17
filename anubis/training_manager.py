@@ -705,12 +705,18 @@ class AutomatedTrainingManager:
         gpu_name: str = "H100 NVL",
         max_price: float = 5.0,
         runtime_hours: float = 24.0,
+        deploy: bool = False,
     ) -> dict[str, Any]:
-        """Full automation: rent, train, wait, download, deploy, destroy.
+        """Full automation: rent, train, wait, download, (optionally) deploy, destroy.
 
         This blocks for the entire training duration (up to 24 hours).
         For non-blocking use, call vast_rent_and_train() instead and
         poll with vast_monitor().
+
+        Args:
+            deploy: If True, deploy the model locally after download.
+                    If False (default), just download the model to models/
+                    and leave it there for manual deployment later.
         """
         if not creator_approved or approval_token != "creator-approved":
             return {
@@ -763,9 +769,13 @@ class AutomatedTrainingManager:
         if "error" in download_result:
             return download_result
 
-        # Step 4: Deploy locally
-        print("Step 4: Deploying model locally...", flush=True)
-        deploy_result = self.deploy_model(job_id)
+        # Step 4: Deploy locally (optional)
+        deploy_result = None
+        if deploy:
+            print("Step 4: Deploying model locally...", flush=True)
+            deploy_result = self.deploy_model(job_id)
+        else:
+            print("Step 4: Skipping deployment (deploy=False). Model saved to models/.", flush=True)
 
         # Step 5: Destroy the instance
         print("Step 5: Destroying remote instance...", flush=True)
@@ -777,7 +787,13 @@ class AutomatedTrainingManager:
             "instance_id": instance_id,
             "model_path": download_result.get("local_path"),
             "model_size_gb": download_result.get("size_gb"),
-            "deployed": deploy_result.get("ok", False),
+            "deployed": deploy_result.get("ok", False) if deploy_result else False,
+            "deployment_skipped": not deploy,
             "instance_destroyed": destroy_result.get("ok", False),
-            "message": "Full automation complete. ANUBIS is now running on his fine-tuned model.",
+            "message": (
+                f"Full automation complete. Model downloaded to {download_result.get('local_path')}. "
+                f"Deploy later with: train_auto_deploy {{\"job_id\": \"{job_id}\"}}"
+                if not deploy else
+                "Full automation complete. ANUBIS is now running on his fine-tuned model."
+            ),
         }

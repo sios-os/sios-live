@@ -6166,18 +6166,20 @@ class AnubisDaemon:
         return self.training_manager.vast_destroy_instance(job_id)
 
     def _cmd_train_vast_full(self, req: dict) -> dict:
-        """Full automation: rent, train, wait, download, deploy, destroy (blocks ~24 hours)."""
+        """Full automation: rent, train, wait, download, (optionally) deploy, destroy (blocks ~24 hours)."""
         creator_approved = req.get("creator_approved", False)
         approval_token = req.get("approval_token", "")
         gpu_name = req.get("gpu_name", "H100 NVL")
         max_price = req.get("max_price", 5.0)
         runtime_hours = req.get("runtime_hours", 24.0)
+        deploy = req.get("deploy", False)
         return self.training_manager.vast_full_automation(
             creator_approved=creator_approved,
             approval_token=approval_token,
             gpu_name=gpu_name,
             max_price=max_price,
             runtime_hours=runtime_hours,
+            deploy=deploy,
         )
 
 
