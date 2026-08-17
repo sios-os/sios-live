@@ -2050,6 +2050,18 @@ class AnubisDaemon:
             return self._cmd_train_auto_deploy(req)
         if cmd == "train_auto_list":
             return self._cmd_train_auto_list()
+        if cmd == "train_vast_search":
+            return self._cmd_train_vast_search(req)
+        if cmd == "train_vast_rent":
+            return self._cmd_train_vast_rent(req)
+        if cmd == "train_vast_monitor":
+            return self._cmd_train_vast_monitor(req)
+        if cmd == "train_vast_download":
+            return self._cmd_train_vast_download(req)
+        if cmd == "train_vast_destroy":
+            return self._cmd_train_vast_destroy(req)
+        if cmd == "train_vast_full":
+            return self._cmd_train_vast_full(req)
         return {"error": f"unknown command: {cmd}"}
 
     def _cmd_status(self) -> dict:
@@ -6108,6 +6120,65 @@ class AnubisDaemon:
     def _cmd_train_auto_list(self) -> dict:
         """List all training jobs."""
         return self.training_manager.get_status_overview()
+
+    # --------------------------------------------------- vast.ai automation
+
+    def _cmd_train_vast_search(self, req: dict) -> dict:
+        """Search for available GPU offers on Vast.ai (read-only)."""
+        gpu_name = req.get("gpu_name", "H100 NVL")
+        max_price = req.get("max_price", 5.0)
+        return self.training_manager.vast_search(gpu_name=gpu_name, max_price=max_price)
+
+    def _cmd_train_vast_rent(self, req: dict) -> dict:
+        """Rent a GPU on Vast.ai and start the training pipeline (Creator-approved)."""
+        creator_approved = req.get("creator_approved", False)
+        approval_token = req.get("approval_token", "")
+        gpu_name = req.get("gpu_name", "H100 NVL")
+        max_price = req.get("max_price", 5.0)
+        runtime_hours = req.get("runtime_hours", 24.0)
+        return self.training_manager.vast_rent_and_train(
+            creator_approved=creator_approved,
+            approval_token=approval_token,
+            gpu_name=gpu_name,
+            max_price=max_price,
+            runtime_hours=runtime_hours,
+        )
+
+    def _cmd_train_vast_monitor(self, req: dict) -> dict:
+        """Monitor the training pipeline on the remote Vast.ai instance."""
+        job_id = req.get("job_id", "")
+        if not job_id:
+            return {"error": "job_id required"}
+        return self.training_manager.vast_monitor(job_id)
+
+    def _cmd_train_vast_download(self, req: dict) -> dict:
+        """Download the trained model from the remote Vast.ai instance."""
+        job_id = req.get("job_id", "")
+        if not job_id:
+            return {"error": "job_id required"}
+        return self.training_manager.vast_download_model(job_id)
+
+    def _cmd_train_vast_destroy(self, req: dict) -> dict:
+        """Destroy the Vast.ai instance after training."""
+        job_id = req.get("job_id", "")
+        if not job_id:
+            return {"error": "job_id required"}
+        return self.training_manager.vast_destroy_instance(job_id)
+
+    def _cmd_train_vast_full(self, req: dict) -> dict:
+        """Full automation: rent, train, wait, download, deploy, destroy (blocks ~24 hours)."""
+        creator_approved = req.get("creator_approved", False)
+        approval_token = req.get("approval_token", "")
+        gpu_name = req.get("gpu_name", "H100 NVL")
+        max_price = req.get("max_price", 5.0)
+        runtime_hours = req.get("runtime_hours", 24.0)
+        return self.training_manager.vast_full_automation(
+            creator_approved=creator_approved,
+            approval_token=approval_token,
+            gpu_name=gpu_name,
+            max_price=max_price,
+            runtime_hours=runtime_hours,
+        )
 
 
 def _summarize_payload(entry) -> str:
