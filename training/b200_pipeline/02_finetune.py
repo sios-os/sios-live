@@ -121,18 +121,28 @@ def fine_tune_unsloth(generation: int, data_path: Path):
     # Load and prepare dataset
     pairs = load_dataset(data_path)
 
-    # Format training examples
-    def format_pair(pair):
+    # Format and tokenize training examples
+    max_seq = config["max_seq_length"]
+
+    def format_and_tokenize(pair):
         messages = pair.get("messages", [])
         if len(messages) < 2:
             return None
         text = tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=False
         )
-        return {"text": text}
+        # Tokenize with padding handled by collator
+        enc = tokenizer(
+            text,
+            truncation=True,
+            max_length=max_seq,
+            return_tensors=None,
+        )
+        enc["labels"] = enc["input_ids"].copy()
+        return enc
 
-    formatted = [format_pair(p) for p in pairs if format_pair(p)]
-    log("finetune", f"Formatted {len(formatted)} training examples")
+    formatted = [format_and_tokenize(p) for p in pairs if format_and_tokenize(p)]
+    log("finetune", f"Formatted and tokenized {len(formatted)} training examples")
 
     # Create HuggingFace dataset
     dataset = Dataset.from_list(formatted)
@@ -160,12 +170,21 @@ def fine_tune_unsloth(generation: int, data_path: Path):
         remove_unused_columns=False,
     )
 
+    # Data collator for tokenized inputs
+    from transformers import DataCollatorForSeq2Seq
+    data_collator = DataCollatorForSeq2Seq(
+        tokenizer=tokenizer,
+        padding=True,
+        return_tensors="pt",
+    )
+
     # Trainer
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=dataset,
         tokenizer=tokenizer,
+        data_collator=data_collator,
     )
 
     # Train
