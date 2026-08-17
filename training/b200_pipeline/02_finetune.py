@@ -37,7 +37,7 @@ GEN_CONFIGS = {
         "per_device_train_batch_size": 1,
         "gradient_accumulation_steps": 16,
         "warmup_ratio": 0.05,
-        "max_seq_length": 2048,
+        "max_seq_length": 1024,
         "use_unsloth": True,
     },
     2: {  # Generation 2 — refined learning from self-distilled data
@@ -46,7 +46,7 @@ GEN_CONFIGS = {
         "per_device_train_batch_size": 1,
         "gradient_accumulation_steps": 16,
         "warmup_ratio": 0.03,
-        "max_seq_length": 2048,
+        "max_seq_length": 1024,
         "use_unsloth": True,
     },
     3: {  # Generation 3 — final polish
@@ -55,7 +55,7 @@ GEN_CONFIGS = {
         "per_device_train_batch_size": 1,
         "gradient_accumulation_steps": 16,
         "warmup_ratio": 0.02,
-        "max_seq_length": 2048,
+        "max_seq_length": 1024,
         "use_unsloth": True,
     },
 }
@@ -119,14 +119,14 @@ def fine_tune_unsloth(generation: int, data_path: Path):
     # Add LoRA adapters for efficient fine-tuning
     model = FastLanguageModel.get_peft_model(
         model,
-        r=64,  # LoRA rank
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
-                        "gate_proj", "up_proj", "down_proj"],
-        lora_alpha=128,
+        r=16,  # Lower LoRA rank to save VRAM
+        target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+        lora_alpha=32,
         lora_dropout=0.05,
         bias="none",
         use_gradient_checkpointing="unsloth",
         random_state=42,
+        loftq_config=None,
     )
 
     vram_gb = torch.cuda.memory_allocated() / 1e9
