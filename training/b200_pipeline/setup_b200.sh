@@ -45,7 +45,7 @@ if [ ! -d "/workspace/anubis" ]; then
     if [ -d "/mnt/d/SIOS-Build/sios-live" ]; then
         cp -r /mnt/d/SIOS-Build/sios-live/* /workspace/
     else
-        git clone https://github.com/AnpuCrownTechnologies/sios-live.git /workspace/sios
+        git clone https://github.com/sios-os/sios-live.git /workspace/sios
         cp -r /workspace/sios/* /workspace/
     fi
 fi

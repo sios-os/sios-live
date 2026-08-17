@@ -1,0 +1,19 @@
+ANUBIS sovereignty pipeline — H100 NVL training, governance modules, Linux deployment
+
+- B200/H100 training pipeline (data gen, fine-tune, evaluate, self-distill, GGUF convert)
+- Automated training manager with Lambda Labs integration
+- Constitutional AI training data generation (32 pairs, all 8 immutable laws)
+- Custom embedding model trained (804 docs, 10871 vocab, 100% retrieval)
+- Mixed model wired into daemon (7 commands, 3 voice patterns)
+- Self-modification pipeline wired (8 commands, 6 voice patterns)
+- Task delegator for parallel sub-agents (4 commands)
+- Security auditor with 8 audit categories (2 commands)
+- Constitutional trainer with export (2 commands)
+- Autonomous prospecting scheduler (daily funding search)
+- Research engine wired to scheduler (2-hour cycle)
+- Linux deployment validated on Ubuntu 24.04 WSL2
+- 2350 tests passing, 0 failures, 0 errors, 6 skipped
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>

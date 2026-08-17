@@ -62,7 +62,7 @@ sudo apt-get install -y -qq \
 if [ ! -d "/workspace/sios" ]; then
     echo "--- Cloning SIOS repository ---"
     mkdir -p /workspace
-    git clone https://github.com/AnpuCrownTechnologies/sios-live.git /workspace/sios || {
+    git clone https://github.com/sios-os/sios-live.git /workspace/sios || {
         echo "Git clone failed — copying from local mount if available..."
         if [ -d "/mnt/d/SIOS-Build/sios-live" ]; then
             cp -r /mnt/d/SIOS-Build/sios-live /workspace/sios

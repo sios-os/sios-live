@@ -241,9 +241,9 @@ class AutomatedTrainingManager:
     def _build_remote_command(self, job: TrainingJob) -> str:
         """Build the command to run on the remote GPU instance."""
         return (
-            "git clone https://github.com/AnpuCrownTechnologies/sios-live.git /workspace/sios && "
+            "git clone https://github.com/sios-os/sios-live.git /workspace/sios && "
             "cd /workspace/sios && "
-            "bash training/b200_pipeline/setup_b200.sh && "
+            "bash training/b200_pipeline/setup_h100_unsloth.sh && "
             f"python training/b200_pipeline/00_master.py"
         )
 
