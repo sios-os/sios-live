@@ -10,10 +10,16 @@ set -e
 
 echo "=== ANUBIS H100 NVL Training Pipeline — Setup ==="
 
+# 0. Activate the conda environment where torch/unsloth are installed
+if [ -f "/opt/miniforge3/etc/profile.d/conda.sh" ]; then
+    source /opt/miniforge3/etc/profile.d/conda.sh
+    conda activate main 2>/dev/null || true
+fi
+
 # 1. Verify GPU
 echo "--- Verifying GPU ---"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
-python3 -c "
+python -c "
 import torch
 print(f'CUDA available: {torch.cuda.is_available()}')
 if torch.cuda.is_available():
@@ -22,7 +28,7 @@ if torch.cuda.is_available():
     print(f'VRAM: {vram:.0f} GB')
     print(f'PyTorch version: {torch.__version__}')
     print(f'CUDA version: {torch.version.cuda}')
-"
+" || true
 
 # 2. Install additional Python dependencies
 echo "--- Installing additional dependencies ---"
@@ -37,7 +43,7 @@ pip install \
 
 # Unsloth should already be in the template, but verify
 echo "--- Verifying Unsloth ---"
-python3 -c "
+python -c "
 try:
     from unsloth import FastLanguageModel
     print('Unsloth: available')
@@ -82,7 +88,7 @@ ln -sf /workspace/sios/training/b200_pipeline /workspace/pipeline 2>/dev/null ||
 # 7. Final verification
 echo ""
 echo "=== Setup Verification ==="
-python3 -c "
+python -c "
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 print(f'PyTorch: {torch.__version__}')
