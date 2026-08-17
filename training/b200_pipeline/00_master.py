@@ -67,12 +67,19 @@ def run_step(name, command, timeout_s=14400):
     log("pipeline", f"Starting: {name}", command=command)
     start = time.time()
 
+    # Ensure PYTHONPATH includes the repo root so anubis module is importable
+    env = os.environ.copy()
+    repo_root = str(Path(__file__).resolve().parent.parent.parent)
+    env["PYTHONPATH"] = repo_root + os.pathsep + env.get("PYTHONPATH", "")
+    env["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
     result = subprocess.run(
         [sys.executable] + command,
         cwd=str(PIPELINE_DIR),
         timeout=timeout_s,
         capture_output=True,
         text=True,
+        env=env,
     )
 
     duration = time.time() - start
