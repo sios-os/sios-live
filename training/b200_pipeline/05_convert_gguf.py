@@ -54,19 +54,22 @@ def convert_to_gguf(model_path: Path, output_dir: Path):
         else:
             log("convert", f"Base model: {base_model_name}")
 
-        # Merge LoRA into base model — must load in full bf16, not 4-bit
-        merged_path = output_dir / "anubis_v3_merged"
-        merge_script = f"""
+        # Merge LoRA into base model — load on GPU, merge, save shard by shard
+        # to conserve disk space. We save to /workspace which has the most space.
+        merged_path = Path("/workspace/anubis_v3_merged")
+        if merged_path.exists():
+            log("convert", "Merged model already exists, skipping merge")
+        else:
+            merge_script = f"""
 import torch
-from unsloth import FastLanguageModel
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-print("Loading base model in full bf16: {base_model_name}")
+print("Loading base model in full bf16 on GPU: {base_model_name}")
 base_model = AutoModelForCausalLM.from_pretrained(
     "{base_model_name}",
     torch_dtype=torch.bfloat16,
-    device_map="cpu",
+    device_map="auto",
     low_cpu_mem_usage=True,
 )
 tokenizer = AutoTokenizer.from_pretrained("{base_model_name}")
@@ -81,18 +84,35 @@ model = model.merge_and_unload()
 if hasattr(model.config, "quantization_config"):
     del model.config.quantization_config
 
+# Move to CPU for saving
+model = model.cpu()
+torch.cuda.empty_cache()
+
 print("Saving merged model to: {merged_path}")
-model.save_pretrained("{merged_path}", safe_serialization=True)
+model.save_pretrained("{merged_path}", safe_serialization=True, max_shard_size="2GB")
 tokenizer.save_pretrained("{merged_path}")
 print("Merge complete!")
+
+del model, base_model
+torch.cuda.empty_cache()
+import gc; gc.collect()
 """
-        subprocess.run(
-            [sys.executable, "-c", merge_script],
-            check=True,
-            env={**os.environ, "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"},
-        )
+            subprocess.run(
+                [sys.executable, "-c", merge_script],
+                check=True,
+                env={**os.environ, "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"},
+            )
+            log("convert", f"Merged model saved to {merged_path}")
+
+            # Clean up HuggingFace cache to free disk space for conversion
+            import shutil
+            cache_dir = Path.home() / ".cache" / "huggingface" / "hub"
+            if cache_dir.exists():
+                for d in cache_dir.iterdir():
+                    if "qwen2.5-32b" in d.name.lower() and "bnb-4bit" not in d.name:
+                        log("convert", f"Cleaning cache: {d.name}")
+                        shutil.rmtree(d, ignore_errors=True)
         model_path = merged_path
-        log("convert", f"Merged model saved to {model_path}")
 
     # Clone llama.cpp if not present
     llama_cpp_dir = Path("/workspace/llama.cpp")
