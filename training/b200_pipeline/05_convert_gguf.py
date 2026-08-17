@@ -35,6 +35,54 @@ def convert_to_gguf(model_path: Path, output_dir: Path):
     """Convert HuggingFace model to GGUF format."""
     log("convert", f"Converting {model_path} to GGUF...")
 
+    # Check if this is a LoRA adapter (no config.json) and merge if needed
+    config_path = model_path / "config.json"
+    adapter_config = model_path / "adapter_config.json"
+
+    if not config_path.exists() and adapter_config.exists():
+        log("convert", "Found LoRA adapter — merging with base model...")
+
+        # Read adapter config to get base model
+        import json as _json
+        adapter_cfg = _json.loads(adapter_config.read_text())
+        base_model_name = adapter_cfg.get("base_model_name_or_path", "Qwen/Qwen2.5-32B-Instruct")
+        log("convert", f"Base model: {base_model_name}")
+
+        # Merge LoRA into base model
+        merged_path = output_dir / "anubis_v3_merged"
+        merge_script = f"""
+import torch
+from unsloth import FastLanguageModel
+from peft import PeftModel
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+print("Loading base model: {base_model_name}")
+base_model = AutoModelForCausalLM.from_pretrained(
+    "{base_model_name}",
+    torch_dtype=torch.bfloat16,
+    device_map="cpu",
+)
+tokenizer = AutoTokenizer.from_pretrained("{base_model_name}")
+
+print("Loading LoRA adapter: {model_path}")
+model = PeftModel.from_pretrained(base_model, "{model_path}")
+
+print("Merging adapter into base model...")
+model = model.merge_and_unload()
+
+print("Saving merged model to: {merged_path}")
+model.save_pretrained("{merged_path}", safe_serialization=True)
+tokenizer.save_pretrained("{merged_path}")
+print("Merge complete!")
+"""
+        subprocess.run(
+            [sys.executable, "-c", merge_script],
+            check=True,
+            env={**os.environ, "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"},
+        )
+        model_path = merged_path
+        log("convert", f"Merged model saved to {model_path}")
+
     # Clone llama.cpp if not present
     llama_cpp_dir = Path("/workspace/llama.cpp")
     if not llama_cpp_dir.exists():
