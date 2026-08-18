@@ -22,7 +22,17 @@ from pathlib import Path
 from datetime import datetime
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "training_output_20k"
+
+# On the training instance, everything the pipeline reads/writes lives under
+# /workspace/training_output — write directly there so 00_master.py and
+# every other pipeline stage find the data without a separate copy step.
+# Locally (e.g. previewing the dataset on a laptop with no /workspace),
+# fall back to a path inside the repo instead.
+_CLOUD_OUTPUT_DIR = Path("/workspace/training_output")
+if _CLOUD_OUTPUT_DIR.parent.exists():
+    OUTPUT_DIR = _CLOUD_OUTPUT_DIR
+else:
+    OUTPUT_DIR = Path(__file__).resolve().parent.parent / "training_output_20k"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 DATA_PATH = OUTPUT_DIR / "training_data_20k.jsonl"
 

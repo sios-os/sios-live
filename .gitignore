@@ -21,6 +21,7 @@ sios-ubuntu-*.iso
 *.safetensors
 models/
 training_output/
+training/training_output_20k/
 memory/custom_embed_model.json
 
 # IDE

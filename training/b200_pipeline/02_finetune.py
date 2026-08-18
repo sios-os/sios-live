@@ -33,6 +33,12 @@ DATA_PATH = OUTPUT_DIR / "training_data_20k.jsonl"
 
 # Training hyperparameters for 20K pairs, 4x A100 80GB
 # Single generation with 4 epochs over 20K pairs = 80K total examples
+# DeepSpeed config resolved relative to THIS file, not the process cwd —
+# 00_master.py runs subprocesses with cwd=training/b200_pipeline/, so a
+# path like "training/b200_pipeline/deepspeed_zero3.json" would never
+# resolve there. Using __file__ makes this robust regardless of cwd.
+DEEPSPEED_CONFIG_PATH = str(Path(__file__).resolve().parent / "deepspeed_zero3.json")
+
 GEN_CONFIGS = {
     1: {  # Generation 1 — broad learning on 20K pairs
         "learning_rate": 2e-5,       # Standard for full fine-tuning
@@ -41,9 +47,8 @@ GEN_CONFIGS = {
         "gradient_accumulation_steps": 8,  # Effective batch = 2*8*4 = 64
         "warmup_ratio": 0.03,         # 3% warmup
         "max_seq_length": 2048,
-        "use_8bit_optimizer": True,   # bitsandbytes 8-bit AdamW
         "use_deepspeed": True,
-        "deepspeed_config": "training/b200_pipeline/deepspeed_zero2.json",
+        "deepspeed_config": DEEPSPEED_CONFIG_PATH,
     },
     2: {  # Generation 2 — refined learning on 20K + self-distilled data
         "learning_rate": 1e-5,
@@ -52,9 +57,8 @@ GEN_CONFIGS = {
         "gradient_accumulation_steps": 8,
         "warmup_ratio": 0.03,
         "max_seq_length": 2048,
-        "use_8bit_optimizer": True,
         "use_deepspeed": True,
-        "deepspeed_config": "training/b200_pipeline/deepspeed_zero2.json",
+        "deepspeed_config": DEEPSPEED_CONFIG_PATH,
     },
     3: {  # Generation 3 — final polish on further expanded data
         "learning_rate": 5e-6,
@@ -63,9 +67,8 @@ GEN_CONFIGS = {
         "gradient_accumulation_steps": 8,
         "warmup_ratio": 0.02,
         "max_seq_length": 2048,
-        "use_8bit_optimizer": True,
         "use_deepspeed": True,
-        "deepspeed_config": "training/b200_pipeline/deepspeed_zero2.json",
+        "deepspeed_config": DEEPSPEED_CONFIG_PATH,
     },
 }
 
@@ -94,7 +97,15 @@ def load_dataset(path: Path) -> list[dict]:
 
 
 def fine_tune_full(generation: int, data_path: Path):
-    """Run full fine-tune using HuggingFace Trainer + DeepSpeed."""
+    """Run full fine-tune using HuggingFace Trainer + DeepSpeed ZeRO-3.
+
+    IMPORTANT: For ZeRO Stage 3, TrainingArguments(deepspeed=...) must be
+    constructed BEFORE AutoModelForCausalLM.from_pretrained() is called.
+    HF Transformers hooks into the DeepSpeed config at that point (via
+    HfDeepSpeedConfig / zero.Init()) so that model weights are partitioned
+    across GPUs *during* loading instead of being fully materialized on
+    every rank first (which would OOM immediately for a 32B model).
+    """
     config = GEN_CONFIGS[generation]
     log("finetune", f"Starting generation {generation} (full fine-tune, 4x A100)", config=config)
 
@@ -111,22 +122,81 @@ def fine_tune_full(generation: int, data_path: Path):
     output_path = OUTPUT_DIR / f"anubis_v{generation}"
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Load tokenizer
+    # Resolve and validate the DeepSpeed config BEFORE anything else
+    ds_config_path = config.get("deepspeed_config", "")
+    if config.get("use_deepspeed"):
+        if not ds_config_path or not Path(ds_config_path).exists():
+            log("error", f"DeepSpeed config not found: {ds_config_path}")
+            raise FileNotFoundError(
+                f"DeepSpeed config required but not found at {ds_config_path}. "
+                "Full fine-tuning a 32B model without ZeRO-3 sharding will OOM."
+            )
+        log("finetune", f"Using DeepSpeed config: {ds_config_path}")
+
+    # Build training arguments FIRST — this registers the DeepSpeed config
+    # via transformers.integrations.deepspeed so that the subsequent
+    # from_pretrained() call partitions weights across GPUs during load.
+    training_args_kwargs = dict(
+        output_dir=str(output_path),
+        num_train_epochs=config["epochs"],
+        per_device_train_batch_size=config["per_device_train_batch_size"],
+        gradient_accumulation_steps=config["gradient_accumulation_steps"],
+        learning_rate=config["learning_rate"],
+        warmup_ratio=config["warmup_ratio"],
+        logging_steps=20,
+        # IMPORTANT: do NOT save intermediate epoch checkpoints. Under
+        # DeepSpeed ZeRO-3, a mid-training checkpoint saves the full
+        # resumable sharded optimizer state (fp32 master + momentum +
+        # variance, ~12+ bytes/param) to disk — for a 32B model that's
+        # several hundred GB PER CHECKPOINT, which would exhaust disk
+        # space almost immediately across 3 generations. A single
+        # generation's training run is only a few hours, so we accept
+        # "restart this generation from scratch" as the failure mode
+        # instead of paying that disk cost. Only the final gathered
+        # 16-bit weights (via stage3_gather_16bit_weights_on_model_save
+        # in the DeepSpeed config) are written, through save_model() below.
+        save_strategy="no",
+        bf16=True,
+        gradient_checkpointing=True,
+        weight_decay=0.01,
+        max_grad_norm=1.0,
+        report_to="none",
+        seed=42,
+        dataloader_num_workers=4,
+        remove_unused_columns=False,
+        save_safetensors=True,
+    )
+
+    if config.get("use_deepspeed"):
+        # The DeepSpeed config (deepspeed_zero3.json) defines its own
+        # "optimizer" (AdamW) and "scheduler" (WarmupDecayLR) sections
+        # with "auto" fields that HF fills in from these TrainingArguments.
+        # Do NOT set optim="adamw_bnb_8bit" here — bitsandbytes 8-bit
+        # optimizer kernels are GPU-only and incompatible with DeepSpeed's
+        # CPU-offloaded optimizer (DeepSpeedCPUAdam), which is required
+        # for a 32B model's optimizer state to fit in host RAM instead of
+        # competing for the same 80GB of GPU VRAM as the model weights.
+        training_args_kwargs["deepspeed"] = ds_config_path
+    else:
+        training_args_kwargs["optim"] = "adamw_torch"
+        training_args_kwargs["lr_scheduler_type"] = "cosine"
+
+    training_args = TrainingArguments(**training_args_kwargs)
+
+    # NOW load tokenizer and model — DeepSpeed ZeRO-3 context is active
     log("finetune", "Loading tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    # Load model in bf16 — DeepSpeed handles sharding
-    log("finetune", f"Loading {BASE_MODEL} in bf16 (DeepSpeed will shard)...")
+    log("finetune", f"Loading {BASE_MODEL} in bf16 (DeepSpeed ZeRO-3 will shard across GPUs)...")
     model = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL,
         torch_dtype=torch.bfloat16,
         trust_remote_code=True,
-        # Don't use device_map with DeepSpeed — it handles placement
+        # Don't use device_map with DeepSpeed — it handles placement/sharding
     )
 
-    # Enable gradient checkpointing to save VRAM
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
 
@@ -157,52 +227,12 @@ def fine_tune_full(generation: int, data_path: Path):
 
     dataset = Dataset.from_list(formatted)
 
-    # Data collator
     data_collator = DataCollatorForSeq2Seq(
         tokenizer=tokenizer,
         padding=True,
         return_tensors="pt",
     )
 
-    # Build training arguments
-    training_args_kwargs = dict(
-        output_dir=str(output_path),
-        num_train_epochs=config["epochs"],
-        per_device_train_batch_size=config["per_device_train_batch_size"],
-        gradient_accumulation_steps=config["gradient_accumulation_steps"],
-        learning_rate=config["learning_rate"],
-        warmup_ratio=config["warmup_ratio"],
-        logging_steps=20,
-        save_strategy="epoch",
-        save_total_limit=2,
-        bf16=True,
-        gradient_checkpointing=True,
-        lr_scheduler_type="cosine",
-        weight_decay=0.01,
-        max_grad_norm=1.0,
-        report_to="none",
-        seed=42,
-        dataloader_num_workers=4,
-        remove_unused_columns=False,
-        save_safetensors=True,
-    )
-
-    # Use 8-bit optimizer if requested
-    if config.get("use_8bit_optimizer"):
-        training_args_kwargs["optim"] = "adamw_bnb_8bit"
-        log("finetune", "Using 8-bit AdamW optimizer (bitsandbytes)")
-    else:
-        training_args_kwargs["optim"] = "adamw_torch"
-
-    # Use DeepSpeed if configured
-    ds_config_path = config.get("deepspeed_config", "")
-    if config.get("use_deepspeed") and ds_config_path and Path(ds_config_path).exists():
-        training_args_kwargs["deepspeed"] = ds_config_path
-        log("finetune", f"Using DeepSpeed config: {ds_config_path}")
-
-    training_args = TrainingArguments(**training_args_kwargs)
-
-    # Trainer
     trainer = Trainer(
         model=model,
         args=training_args,
@@ -236,9 +266,9 @@ def fine_tune_full(generation: int, data_path: Path):
         "train_loss": train_result.training_loss,
         "timestamp": datetime.utcnow().isoformat(),
         "artifact_hash": _hash_dir(output_path),
-        "backend": "deepspeed_zero2",
+        "backend": "deepspeed_zero3",
         "gpu": "4x A100 80GB",
-        "optimizer": "adamw_bnb_8bit" if config.get("use_8bit_optimizer") else "adamw_torch",
+        "optimizer": "deepspeed_adamw_cpu_offload" if config.get("use_deepspeed") else "adamw_torch",
         "effective_batch_size": (
             config["per_device_train_batch_size"]
             * config["gradient_accumulation_steps"]

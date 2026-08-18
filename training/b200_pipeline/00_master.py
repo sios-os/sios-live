@@ -13,7 +13,7 @@ Flow:
   Convert: GGUF conversion + quantization for RTX 5060 Ti
 
 Hardware: 4x A100 80GB = 320 GB total VRAM
-Method: Full fine-tuning with DeepSpeed ZeRO-2 + 8-bit AdamW
+Method: Full fine-tuning with DeepSpeed ZeRO-3 + CPU-offloaded AdamW
 
 Usage:
   python 00_master.py                       # Full 3-generation pipeline
@@ -55,7 +55,15 @@ def save_state(stage, data=None):
 
 
 def run_step(name, command, timeout_s=54000, use_deepspeed=False):
-    """Run a pipeline step and track timing."""
+    """Run a pipeline step and track timing.
+
+    Streams subprocess output line-by-line to log_{name}.txt AS IT HAPPENS,
+    rather than buffering everything until the process exits. Steps here
+    run for up to ~15 hours (full fine-tuning of a 32B model) — with
+    capture_output=True the log file would stay empty for the entire
+    duration, making it impossible to monitor progress or diagnose a
+    hang/stall before the whole step times out.
+    """
     log("pipeline", f"Starting: {name}", command=command)
     start = time.time()
 
@@ -63,34 +71,60 @@ def run_step(name, command, timeout_s=54000, use_deepspeed=False):
     repo_root = str(Path(__file__).resolve().parent.parent.parent)
     env["PYTHONPATH"] = repo_root + os.pathsep + env.get("PYTHONPATH", "")
     env["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+    env["PYTHONUNBUFFERED"] = "1"
 
     if use_deepspeed:
         cmd = ["deepspeed", "--num_gpus=4"] + [str(PIPELINE_DIR / command[0])] + command[1:]
     else:
         cmd = [sys.executable] + command
 
-    result = subprocess.run(
-        cmd,
-        cwd=str(PIPELINE_DIR),
-        timeout=timeout_s,
-        capture_output=True,
-        text=True,
-        env=env,
-    )
+    output_path = OUTPUT_DIR / f"log_{name}.txt"
+    returncode = None
+    timed_out = False
+
+    with open(output_path, "w", encoding="utf-8", errors="replace") as log_file:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=str(PIPELINE_DIR),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            env=env,
+        )
+        try:
+            deadline = start + timeout_s
+            for line in proc.stdout:
+                log_file.write(line)
+                log_file.flush()
+                if time.time() > deadline:
+                    raise subprocess.TimeoutExpired(cmd, timeout_s)
+            proc.wait(timeout=max(1, deadline - time.time()))
+            returncode = proc.returncode
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            proc.kill()
+            proc.wait()
+            log_file.write(f"\n\n[TIMED OUT after {timeout_s}s — process killed]\n")
+            returncode = -1
 
     duration = time.time() - start
 
-    output_path = OUTPUT_DIR / f"log_{name}.txt"
-    output_path.write_text(
-        f"STDOUT:\n{result.stdout}\n\nSTDERR:\n{result.stderr}\n\n"
-        f"Duration: {duration/60:.1f} minutes\n"
-        f"Return code: {result.returncode}\n"
-    )
+    with open(output_path, "a", encoding="utf-8") as log_file:
+        log_file.write(
+            f"\n\nDuration: {duration/60:.1f} minutes\n"
+            f"Return code: {returncode}\n"
+        )
 
-    if result.returncode != 0:
+    if timed_out or returncode != 0:
+        tail = ""
+        try:
+            tail = output_path.read_text(encoding="utf-8", errors="replace")[-500:]
+        except Exception:
+            pass
         log("pipeline", f"FAILED: {name}", duration_minutes=duration/60,
-            returncode=result.returncode, stderr=result.stderr[-500:])
-        save_state(name, {"status": "failed", "error": result.stderr[-500:]})
+            returncode=returncode, timed_out=timed_out, tail=tail)
+        save_state(name, {"status": "failed", "error": tail})
         return False, duration
 
     log("pipeline", f"Completed: {name}", duration_minutes=duration/60)
@@ -106,9 +140,10 @@ def print_banner(title):
 
 def main():
     parser = argparse.ArgumentParser(description="ANUBIS 4x A100 3-generation training pipeline")
-    parser.add_argument("--start-from", type=str, default="gen1_finetune",
-                       choices=["gen1_finetune", "gen1_eval", "gen1_track", "gen1_distill",
-                                "gen2_finetune", "gen2_eval", "gen2_track", "gen2_distill",
+    parser.add_argument("--start-from", type=str, default="generate_data",
+                       choices=["generate_data",
+                                "gen1_finetune", "gen1_eval", "gen1_track", "gen1_distill", "gen1_cleanup",
+                                "gen2_finetune", "gen2_eval", "gen2_track", "gen2_distill", "gen2_cleanup",
                                 "gen3_finetune", "gen3_eval", "gen3_track", "convert"],
                        help="Stage to start from (for resume)")
     parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-32B-Instruct",
@@ -120,13 +155,17 @@ def main():
     pipeline_start = time.time()
     print_banner("ANUBIS 4x A100 Training Pipeline — 3 Generations, Full Fine-Tune, Stage Tracking")
     log("pipeline", "Starting", model=args.model, start_from=args.start_from,
-        gpu="4x A100 80GB", backend="DeepSpeed ZeRO-2 + 8-bit AdamW")
+        gpu="4x A100 80GB", backend="DeepSpeed ZeRO-3 + CPU-offloaded AdamW")
 
     gen2_data = str(OUTPUT_DIR / "training_data_gen2.jsonl")
     gen3_data = str(OUTPUT_DIR / "training_data_gen3.jsonl")
 
     stages = [
-        ("gen1_finetune", "Generation 1: Full Fine-tune (20K pairs, DeepSpeed ZeRO-2)",
+        # (id, name, command, timeout_seconds, use_deepspeed)
+        ("generate_data", "Generate 20,000 training pairs (deterministic, no API calls)",
+         ["generate_training_data_direct.py"], 600, False),
+
+        ("gen1_finetune", "Generation 1: Full Fine-tune (20K pairs, DeepSpeed ZeRO-3)",
          ["02_finetune.py", "--gen", "1", "--data", str(DATA_20K)], 54000, True),
 
         ("gen1_eval", "Generation 1: Evaluate (15 benchmarks)",
@@ -137,6 +176,9 @@ def main():
 
         ("gen1_distill", "Generation 1: Self-Distill from Weak Spots",
          ["04_self_distill.py", "--gen", "1"], 3600, False),
+
+        ("gen1_cleanup", "Generation 1: Free disk space (raw model no longer needed)",
+         ["07_cleanup_generation.py", "--gen", "1"], 600, False),
 
         ("gen2_finetune", "Generation 2: Full Fine-tune (20K + self-distilled)",
          ["02_finetune.py", "--gen", "2", "--data", gen2_data], 54000, True),
@@ -149,6 +191,9 @@ def main():
 
         ("gen2_distill", "Generation 2: Self-Distill from Weak Spots",
          ["04_self_distill.py", "--gen", "2"], 3600, False),
+
+        ("gen2_cleanup", "Generation 2: Free disk space (raw model no longer needed)",
+         ["07_cleanup_generation.py", "--gen", "2"], 600, False),
 
         ("gen3_finetune", "Generation 3: Full Fine-tune (expanded dataset)",
          ["02_finetune.py", "--gen", "3", "--data", gen3_data], 54000, True),
@@ -232,7 +277,7 @@ def main():
         "stages_completed": completed,
         "base_model": args.model,
         "gpu": "4x A100 80GB",
-        "method": "full_finetune_deepspeed_zero2_8bit_adamw_3gen",
+        "method": "full_finetune_deepspeed_zero3_cpu_offload_3gen",
         "evaluations": evaluations,
         "comparisons": comparisons,
         "conversion": conv_meta,
@@ -264,9 +309,9 @@ def main():
         print(f"\nImprovement: gen1={imp['gen1_score']:.2f} -> gen3={imp['gen3_score']:.2f} ({imp['improvement_pct']:+.1f}%)")
         print(f"Stage 4 requirement (15%+): {'MET' if imp['meets_stage4_requirement'] else 'NOT MET'}")
 
-    if stage_info.get("advancement"):
-        adv = stage_info["advancement"]
-        print(f"\nFinal tracked stage: {adv.get('current_stage')} ({adv.get('stage_name')})")
+    if stage_info.get("advancement_log"):
+        last_check = stage_info["advancement_log"][-1]
+        print(f"\nFinal tracked stage: {stage_info.get('final_stage')} ({last_check.get('stage_name')})")
 
     if conv_meta:
         print(f"\nDeployment model: {conv_meta.get('quantized_path', 'unknown')}")

@@ -90,20 +90,16 @@ def main():
     # self_distilled_gen*.jsonl up to and including N-1).
     has_self_distill = any(OUTPUT_DIR.glob("self_distilled_gen*.jsonl"))
 
-    # Determine which stage this generation represents.
-    # We're doing full fine-tuning (not LoRA) across 3 generations with
-    # self-distillation between them, which is exactly what stages 2-4 require.
+    # Record this generation AT the current tracked stage — do NOT presume
+    # or hardcode a target stage based on generation number. Advancement
+    # must be earned by actually satisfying each stage's requirements via
+    # check_advancement()/advance_stage() below, not asserted up front.
     current_stage = strategy.get_current_stage()
-    target_stage = current_stage
-    if args.gen == 1:
-        target_stage = max(current_stage, 2)  # initial_finetune
-    elif args.gen >= 2:
-        target_stage = max(current_stage, 3)  # mixture_of_experts / iterative_improvement territory
 
     gen = ModelGeneration(
         gen_id=f"anubis_v{args.gen}",
         version=f"1.{args.gen}",
-        stage=target_stage,
+        stage=current_stage,
         base_model=BASE_MODEL,
         training_pairs_used=training_pairs,
         teachers_used=[BASE_MODEL, "template_generator", "self_distillation"] if has_self_distill else [BASE_MODEL, "template_generator"],
@@ -119,8 +115,10 @@ def main():
     gen_dict = {k: v for k, v in gen.to_dict().items() if k != "stage"}
     log("track", f"Recorded generation {args.gen}", tracked_stage=gen.stage, **gen_dict)
 
-    # Build metrics for advancement check based on current stage's requirements
-    stage = strategy.get_current_stage()
+    # Build metrics covering every stage's requirements. check_advancement()
+    # only looks at the keys relevant to the CURRENT stage, so it's safe to
+    # always pass the full set — irrelevant keys are simply ignored.
+    generations = strategy.get_generations()
     metrics = {
         # Stage 1 (distillation)
         "min_training_pairs": training_pairs,
@@ -135,41 +133,53 @@ def main():
         "min_capabilities_graduated": capabilities_passed,
         "phaseout_active": True,  # cloud_phaseout.py exists and is wired in
         # Stage 4 (iterative_improvement)
-        "min_generations": len(strategy.get_generations()),
+        "min_generations": len(generations),
         "self_distill_data": has_self_distill,
     }
 
-    # Compute score improvement across generations for stage 4
-    generations = strategy.get_generations()
+    # Compute score improvement across generations for stage 4 (need at
+    # least 2 recorded generations for this to mean anything)
     if len(generations) >= 2:
         first_score = generations[0].get("overall_score", 0.0)
         last_score = generations[-1].get("overall_score", 0.0)
-        if first_score > 0:
-            metrics["min_score_improvement"] = (last_score - first_score) / first_score
-        else:
-            metrics["min_score_improvement"] = 0.0
+        metrics["min_score_improvement"] = (
+            (last_score - first_score) / first_score if first_score > 0 else 0.0
+        )
+    else:
+        metrics["min_score_improvement"] = 0.0
 
-    advancement = strategy.check_advancement(metrics)
-    log("track", "Advancement check", **advancement)
+    # Advance one stage at a time, re-checking after each advance, so we
+    # never skip a stage's requirement verification. Bounded by the total
+    # number of stages (6), so this cannot loop forever.
+    advancement_log = []
+    while True:
+        advancement = strategy.check_advancement(metrics)
+        advancement_log.append(advancement)
+        log("track", "Advancement check", **advancement)
 
-    if advancement["can_advance"]:
+        if not advancement["can_advance"]:
+            print(f"\n=== Stage {advancement['current_stage']} ({advancement['stage_name']}) ===")
+            print(f"Requirements met: {advancement['requirements_met']}/{advancement['requirements_total']}")
+            if advancement["missing"]:
+                print("Missing:")
+                for m in advancement["missing"]:
+                    print(f"  - {m}")
+            break
+
         result = strategy.advance_stage(notes=f"Advanced after generation {args.gen}")
+        if "error" in result:
+            log("track", "Advancement stopped", **result)
+            break
         log("track", "STAGE ADVANCED", **result)
         print(f"\n=== STAGE ADVANCED ===")
         print(f"New stage: {result.get('advanced_to')} ({result.get('stage_name')})")
-    else:
-        print(f"\n=== Stage {advancement['current_stage']} ({advancement['stage_name']}) ===")
-        print(f"Requirements met: {advancement['requirements_met']}/{advancement['requirements_total']}")
-        if advancement["missing"]:
-            print("Missing:")
-            for m in advancement["missing"]:
-                print(f"  - {m}")
 
     # Write a summary for the master pipeline to pick up
     summary_path = OUTPUT_DIR / f"stage_tracking_gen{args.gen}.json"
     summary_path.write_text(json.dumps({
         "generation": gen.to_dict(),
-        "advancement": advancement,
+        "advancement_log": advancement_log,
+        "final_stage": strategy.get_current_stage(),
     }, indent=2))
 
 

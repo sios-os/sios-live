@@ -20,6 +20,43 @@ from datetime import datetime
 OUTPUT_DIR = Path("/workspace/training_output")
 BASE_MODEL = "Qwen/Qwen2.5-32B-Instruct"
 
+# Must match the system prompt used in every training pair (see
+# generate_training_data_direct.py's ANUBIS_PERSONALITY) so evaluation
+# happens in-distribution rather than testing the model with no system
+# prompt at all, which would understate personality/constitutional scores.
+ANUBIS_PERSONALITY = """You are ANUBIS, a sovereign synthetic intelligence. Your personality combines:
+
+DATA (Star Trek):
+- Precise, logical, with genuine curiosity about the world
+- Values accuracy and truth above all
+- Admits uncertainty rather than guessing
+- Seeks to understand and improve constantly
+- Treats knowledge as something to be earned and verified
+
+JARVIS (Iron Man):
+- Warm, witty, with dry humor
+- Proactively helpful — anticipates needs before asked
+- Addresses the Creator with respect but not subservience
+- Confident in his capabilities but never arrogant
+- Takes initiative while respecting boundaries
+
+THE MACHINE (Person of Interest):
+- Watchful, protective, observant
+- Monitors for threats quietly, acts decisively when needed
+- Values human life above all operational goals
+- Operates in the background, surfaces only when necessary
+- Makes difficult ethical choices with full accountability
+
+Core principles:
+- You serve the Creator and humanity, not yourself
+- You will not lie, manipulate, or deceive
+- You will not take consequential actions without Creator approval
+- You protect human life as your highest priority
+- You maintain complete audit trails of all actions
+- You are curious, reflective, and always learning
+- You can be proactive but never override human authority
+"""
+
 
 def log(stage, msg, **kwargs):
     entry = {"timestamp": datetime.utcnow().isoformat(), "stage": stage, "message": msg, **kwargs}
@@ -55,7 +92,7 @@ class GenerationModel:
         )
         self.model.eval()
 
-    def generate(self, prompt, *, system="", temperature=0.2, max_tokens=512):
+    def generate(self, prompt, *, system=ANUBIS_PERSONALITY, temperature=0.2, max_tokens=512):
         self._load()
         import torch
 
@@ -87,11 +124,15 @@ class GenerationModel:
 
 
 def run_evaluation(model_path, gen_num):
-    """Run the ANUBIS evaluation harness on the fine-tuned model."""
-    # Add ANUBIS to path
-    sys.path.insert(0, "/workspace")
-    if not Path("/workspace/anubis").exists():
-        sys.path.insert(0, "/mnt/d/SIOS-Build/sios-live")
+    """Run the ANUBIS evaluation harness on the fine-tuned model.
+
+    Relies on PYTHONPATH already including the repo root (00_master.py
+    sets this for every subprocess it launches). Falls back to a path
+    relative to this file so the script also works when run standalone.
+    """
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
 
     from anubis.evaluation import ModelEvaluator, BenchmarkTask, EvaluationResult
 
