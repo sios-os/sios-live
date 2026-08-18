@@ -73,7 +73,7 @@ def self_distill(generation: int):
     """Generate self-distilled training pairs from weak spots."""
     model_path = OUTPUT_DIR / f"anubis_v{generation}"
     weak_spots_path = OUTPUT_DIR / f"weak_spots_gen{generation}.json"
-    base_data_path = OUTPUT_DIR / "training_data.jsonl"
+    base_data_path = OUTPUT_DIR / "training_data_20k.jsonl"
 
     if not weak_spots_path.exists():
         log("error", f"Weak spots file not found: {weak_spots_path}")

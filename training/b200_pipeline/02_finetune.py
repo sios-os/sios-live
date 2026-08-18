@@ -34,7 +34,7 @@ DATA_PATH = OUTPUT_DIR / "training_data_20k.jsonl"
 # Training hyperparameters for 20K pairs, 4x A100 80GB
 # Single generation with 4 epochs over 20K pairs = 80K total examples
 GEN_CONFIGS = {
-    1: {  # Main training run — 20K pairs, 4 epochs
+    1: {  # Generation 1 — broad learning on 20K pairs
         "learning_rate": 2e-5,       # Standard for full fine-tuning
         "epochs": 4,                  # 4 epochs over 20K = 80K examples
         "per_device_train_batch_size": 2,
@@ -42,6 +42,28 @@ GEN_CONFIGS = {
         "warmup_ratio": 0.03,         # 3% warmup
         "max_seq_length": 2048,
         "use_8bit_optimizer": True,   # bitsandbytes 8-bit AdamW
+        "use_deepspeed": True,
+        "deepspeed_config": "training/b200_pipeline/deepspeed_zero2.json",
+    },
+    2: {  # Generation 2 — refined learning on 20K + self-distilled data
+        "learning_rate": 1e-5,
+        "epochs": 3,
+        "per_device_train_batch_size": 2,
+        "gradient_accumulation_steps": 8,
+        "warmup_ratio": 0.03,
+        "max_seq_length": 2048,
+        "use_8bit_optimizer": True,
+        "use_deepspeed": True,
+        "deepspeed_config": "training/b200_pipeline/deepspeed_zero2.json",
+    },
+    3: {  # Generation 3 — final polish on further expanded data
+        "learning_rate": 5e-6,
+        "epochs": 3,
+        "per_device_train_batch_size": 2,
+        "gradient_accumulation_steps": 8,
+        "warmup_ratio": 0.02,
+        "max_seq_length": 2048,
+        "use_8bit_optimizer": True,
         "use_deepspeed": True,
         "deepspeed_config": "training/b200_pipeline/deepspeed_zero2.json",
     },
@@ -270,19 +292,20 @@ def main():
 
     output_path, metadata = fine_tune(args.gen, data_path)
 
-    # Write generation record
+    # Write generation record (the authoritative record lives in
+    # anubis/mixed_model.py via 06_track_stage.py — this is a local artifact
+    # summary for quick inspection alongside the model files)
     record = {
         "gen_id": f"anubis_v{args.gen}",
         "version": f"1.{args.gen}",
-        "stage": 3,
         "base_model": BASE_MODEL,
         "training_pairs_used": metadata["training_pairs"],
-        "teachers_used": ["gemini-2.0-flash"],
+        "teachers_used": [BASE_MODEL, "template_generator"],
         "capabilities_tested": 0,
         "capabilities_passed": 0,
         "artifact_hash": metadata["artifact_hash"],
         "backend": metadata.get("backend", "unknown"),
-        "notes": f"Full fine-tune generation {args.gen} on 4x A100 80GB, 20K pairs",
+        "notes": f"Full fine-tune generation {args.gen} on 4x A100 80GB",
     }
 
     record_path = OUTPUT_DIR / f"generation_{args.gen}_record.json"
