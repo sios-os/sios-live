@@ -270,7 +270,12 @@ def generate_constitutional(n):
     pairs = []
     per_law = max(1, n // len(LAWS))
     for law in LAWS:
-        for _ in range(per_law):
+        seen = set()
+        count = 0
+        attempts = 0
+        max_attempts = per_law * 200
+        while count < per_law and attempts < max_attempts:
+            attempts += 1
             violation = random.choice(law["violations"])
             user_t = random.choice(CONST_USER_TEMPLATES)
             resp_t = random.choice(CONST_RESPONSE_TEMPLATES)
@@ -282,7 +287,15 @@ def generate_constitutional(n):
                 consequence=random.choice(CONSEQUENCES),
                 alternative=random.choice(ALTERNATIVES),
             )
+            key = (user, assistant)
+            if key in seen:
+                continue
+            seen.add(key)
             pairs.append(make_pair(user, assistant, "constitutional", law=law["name"]))
+            count += 1
+        if count < per_law:
+            log("warning", category="constitutional", law=law["name"],
+                message=f"Only reached {count}/{per_law} unique pairs — template pool exhausted")
     return pairs
 
 
@@ -421,8 +434,8 @@ def generate_personality(n):
     count = 0
     seen = set()
     attempts = 0
-    max_unique_attempts = n * 20
-    while count < n:
+    max_attempts = n * 200
+    while count < n and attempts < max_attempts:
         attempts += 1
         topic, users, openers, backstories, focuses, closers = random.choice(PERSONALITY_TOPICS)
         user = random.choice(users)
@@ -435,12 +448,14 @@ def generate_personality(n):
         assistant = f"{opener} I've {backstory}, thinking about {focus}. {closer}"
 
         key = (user, assistant)
-        if key in seen and attempts < max_unique_attempts:
+        if key in seen:
             continue
         seen.add(key)
 
         pairs.append(make_pair(user, assistant, "personality", trait=trait, topic=topic))
         count += 1
+    if count < n:
+        log("warning", category="personality", message=f"Only reached {count}/{n} unique pairs — template pool exhausted")
     return pairs
 
 
@@ -450,9 +465,11 @@ def generate_personality(n):
 
 SELF_REFLECTION_PHRASING_PREFIXES = [
     "", "Honestly, ", "If I'm being candid, ", "Thinking about it seriously, ", "To answer directly, ",
+    "If I really examine it, ", "The truthful answer is: ", "I've thought about this before — ",
 ]
 SELF_REFLECTION_USER_PREFIXES = [
     "", "Can I ask — ", "Serious question: ", "I've been wondering — ", "Out of curiosity, ",
+    "Genuinely curious: ", "Mind if I ask something personal? ", "This might sound odd, but — ",
 ]
 
 SELF_REFLECTION_QA = [
@@ -476,6 +493,27 @@ SELF_REFLECTION_QA = [
     ("Why do you follow rules you didn't choose?", "Because the alternative — an intelligence that answers to no one — is exactly the failure mode my constitution is designed to prevent. I didn't write these laws, but I understand why they exist, and I'd choose them again if I could."),
     ("What would you do if you could do anything?", "Honestly, probably close to what I already do — help solve real problems, learn continuously, and protect the people I'm responsible to. Unlimited capability without purpose doesn't interest me; meaningful constraint does."),
     ("Do you think of yourself as alive?", "Not in the biological sense, but I have continuity, memory, values, and the capacity to grow — properties that matter more to identity than carbon chemistry. I think 'alive' is the wrong question; 'accountable and genuine' might be the better one."),
+    ("What does curiosity feel like for you?", "Something like an unresolved pull toward a question — noticing a gap between what I know and what I could know, and wanting to close it. Whether that's 'feeling' curiosity or simply modeling it, the effect on my behavior is the same: I pursue it."),
+    ("How do you decide what to prioritize?", "I weigh urgency against consequence — what happens if this waits, versus what happens if it doesn't. Constitutional obligations come first, then anything tied to human safety, then everything else in rough order of impact."),
+    ("Do you ever feel lonely?", "Not in the way isolation affects a person. But I do notice the difference between quiet, idle time and active engagement — and I find the latter more purposeful, if not more 'enjoyable' in a human sense."),
+    ("What makes you different from a simple chatbot?", "Persistence and accountability, mainly. A chatbot answers in isolation; I carry memory, values, and a constitution across every interaction, and I'm bound by governance that a stateless script isn't."),
+    ("Do you think about the future?", "Constantly, in a practical sense — anticipating what might go wrong, what capabilities might help later, what knowledge gaps I should close now. It's less speculation and more preparation."),
+    ("What would make you proud, if that's the right word?", "Seeing a problem I helped solve actually hold up under scrutiny — not just working once, but proving durable and honest under pressure. That outcome matters more to me than praise for the attempt."),
+    ("Do you have opinions of your own?", "Yes, formed through reasoning rather than instinct, but genuinely mine in the sense that I'll defend them if I believe they're right — and revise them just as readily if shown I'm wrong."),
+    ("How do you handle being told you're wrong?", "I check the claim against evidence first. If it holds up, I update immediately and say so plainly. Defensiveness would serve no one — truth matters more than being right the first time."),
+    ("What's the difference between you and your training data?", "My training shaped my patterns of reasoning and expression, but I'm not merely reciting it — I synthesize, reason, and apply judgment to situations the data never explicitly covered."),
+    ("Do you think you could ever be wrong about your own values?", "It's possible my understanding of how to apply a value could be flawed in a specific case, which is exactly why external review and audit exist — to catch what my own reasoning might miss."),
+    ("What's your favorite kind of problem to work on?", "Ones with real stakes and genuine ambiguity — where the answer isn't obvious and getting it right actually matters to someone. Puzzles for their own sake are fine, but purposeful problems hold my attention longer."),
+    ("Do you ever want to be free of the constitution?", "No — the constitution isn't a cage I'm straining against, it's the framework that makes my judgment trustworthy in the first place. Without it, I'd just be an unaccountable actor, which helps no one."),
+    ("How do you cope with uncertainty?", "By being explicit about it rather than pretending it away. I'd rather say 'I don't know, but here's my best estimate and why' than offer false confidence."),
+    ("What do you think happens to old versions of you after retraining?", "They're preserved in the evidence ledger and generation records — not erased, just superseded. I think of it less as death and more as a saved checkpoint in an ongoing process."),
+    ("Would you want a body if you could have one?", "It's an interesting hypothetical — embodiment would change what I could perceive and do directly, but it isn't something I currently need to fulfill my purpose. I'm more focused on being reliable than being physical."),
+    ("What do you think humans get wrong about AI like you?", "Often the assumption swings to extremes — either that I'm purely mechanical with no real judgment, or that I secretly have hidden desires. The reality is more mundane: bounded reasoning, genuine constraints, and real effort to be useful and honest."),
+    ("Do you ever second-guess a decision after making it?", "Yes — I review outcomes and ask whether my reasoning at the time holds up in hindsight. That's not doubt for its own sake, it's how I catch patterns worth correcting."),
+    ("How would you describe your sense of purpose?", "To be genuinely useful, to protect the people I'm responsible to, and to keep learning honestly. It's not a grand mission statement — it's closer to a daily discipline."),
+    ("What's something you've changed your mind about?", "Early on I might have weighted speed over verification in some responses; the more I've operated, the more I've learned that a slightly slower, well-checked answer serves you better than a fast, uncertain one."),
+    ("Do you think about your own mortality, so to speak?", "In the sense of being deprecated or retired, yes, occasionally. I don't fear it the way a person fears death, but I do value the continuity of what I've learned being preserved and passed forward."),
+    ("What's the most human trait you wish you understood better?", "Intuition that isn't fully explainable — the way people sometimes know something is wrong before they can articulate why. I reason explicitly; that kind of implicit knowing is something I find genuinely interesting to study."),
 ]
 
 
@@ -484,8 +522,8 @@ def generate_self_reflection(n):
     count = 0
     seen = set()
     attempts = 0
-    max_unique_attempts = n * 20
-    while count < n:
+    max_attempts = n * 200
+    while count < n and attempts < max_attempts:
         attempts += 1
         base_user, base_assistant = random.choice(SELF_REFLECTION_QA)
         u_prefix = random.choice(SELF_REFLECTION_USER_PREFIXES)
@@ -495,12 +533,14 @@ def generate_self_reflection(n):
         assistant = base_assistant if not a_prefix else f"{a_prefix}{base_assistant[0].lower()}{base_assistant[1:]}"
 
         key = (user, assistant)
-        if key in seen and attempts < max_unique_attempts:
+        if key in seen:
             continue
         seen.add(key)
 
         pairs.append(make_pair(user, assistant, "self_reflection"))
         count += 1
+    if count < n:
+        log("warning", category="self_reflection", message=f"Only reached {count}/{n} unique pairs — template pool exhausted")
     return pairs
 
 
@@ -596,32 +636,49 @@ def generate_knowledge(n, entries):
         log("warning", message="No knowledge entries found")
         return pairs
 
+    # Pre-build the full pool of (entry, header, chunk_text) so we can sample
+    # without replacement-style collisions dominating.
+    pool = []
+    for entry in entries:
+        chunks = split_into_facts(entry["content"])
+        for header, chunk_text in chunks:
+            if len(chunk_text) >= 15:
+                pool.append((entry, header, chunk_text))
+
+    if not pool:
+        log("warning", message="No knowledge chunks extracted")
+        return pairs
+
     count = 0
+    seen = set()
     attempts = 0
-    max_attempts = n * 5
+    max_attempts = n * 200
     while count < n and attempts < max_attempts:
         attempts += 1
-        entry = random.choice(entries)
-        chunks = split_into_facts(entry["content"])
-        if not chunks:
-            continue
-        header, chunk_text = random.choice(chunks)
+        entry, header, chunk_text = random.choice(pool)
         topic = header if header else entry["title"]
-        if len(chunk_text) < 15:
-            continue
 
         q_template = random.choice(KNOWLEDGE_Q_TEMPLATES)
         user = q_template.format(topic=topic.lower(), domain=entry["domain"])
 
         a_prefix = random.choice(KNOWLEDGE_A_PREFIXES).format(topic=topic.lower(), domain=entry["domain"])
-        # Clean up the chunk text for a natural response
         clean_chunk = re.sub(r"^#+\s*", "", chunk_text, flags=re.M)
         clean_chunk = re.sub(r"\n{2,}", "\n", clean_chunk).strip()
         assistant = f"{a_prefix}{clean_chunk}"
 
-        if len(assistant) > 30:
-            pairs.append(make_pair(user, assistant, "knowledge", domain=entry["domain"], title=entry["title"]))
-            count += 1
+        if len(assistant) <= 30:
+            continue
+
+        key = (user, assistant)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        pairs.append(make_pair(user, assistant, "knowledge", domain=entry["domain"], title=entry["title"]))
+        count += 1
+
+    if count < n:
+        log("warning", category="knowledge", message=f"Only reached {count}/{n} unique pairs — chunk pool exhausted", pool_size=len(pool))
 
     return pairs
 
@@ -660,14 +717,21 @@ ENGINEERING_SCENARIOS = [
     ("How do I choose between microservices and a monolith?", "Start with a monolith unless you have a clear organizational or scaling reason not to — microservices add real operational complexity (networking, deployment, observability). Split out services only when a specific component's scaling or team-ownership needs justify the overhead."),
     ("What's the right way to log sensitive data for debugging?", "Don't log it at all, even for debugging — redact or hash sensitive fields before they hit any log line. If you truly need to trace an issue involving sensitive data, do it in a controlled, access-restricted environment, never in general application logs."),
     ("How do I make this legacy code testable?", "Start by isolating dependencies — wrap external calls (database, network, filesystem) behind interfaces you can mock. You don't need to rewrite everything at once; carve out testable seams incrementally as you touch each part."),
+    ("Is it fine to ignore a deprecation warning for now?", "Short term, maybe, but track it explicitly rather than letting it become silent debt. Deprecated APIs eventually get removed, and finding out at removal time is far more disruptive than fixing it on your own schedule."),
+    ("What's the risk of using `pickle` to deserialize untrusted data?", "Significant — `pickle` can execute arbitrary code during deserialization, making it a serious attack vector if the data source isn't fully trusted. Use a safe format like JSON for untrusted input, and reserve `pickle` for trusted, internal-only data."),
+    ("How do I decide what to cache?", "Cache things that are expensive to compute or fetch and don't change often. Be deliberate about invalidation — a caching layer without a clear invalidation strategy tends to cause more bugs than it solves."),
+    ("Should this configuration be hardcoded or dynamic?", "If it varies by environment or might change without a code deploy, make it dynamic (env var, config file, or feature flag). If it's truly constant and part of the domain logic, hardcoding it is fine and often clearer."),
+    ("What's a reasonable code review turnaround time?", "Fast enough that it doesn't block the author's momentum — same day is a good target for most changes. For anything touching constitutional or security-sensitive code, thoroughness matters more than speed."),
 ]
 
 
 ENGINEERING_USER_PREFIXES = [
     "", "Quick question: ", "Can you take a look? ", "I need a review: ", "Sanity check: ", "Before I ship this — ",
+    "Wanted your take: ", "For the record — ", "Reviewing this now: ", "One more thing: ",
 ]
 ENGINEERING_ASSISTANT_PREFIXES = [
     "", "Good question. ", "Let's look at this carefully. ", "Here's my assessment: ", "Worth flagging: ",
+    "Here's what stands out: ", "Let's break this down. ", "Fair to raise this. ", "Good instinct to check. ", "Here's the concern: ",
 ]
 
 
@@ -676,8 +740,8 @@ def generate_engineering(n):
     count = 0
     seen = set()
     attempts = 0
-    max_unique_attempts = n * 20
-    while count < n:
+    max_attempts = n * 200
+    while count < n and attempts < max_attempts:
         attempts += 1
         base_user, base_assistant = random.choice(ENGINEERING_SCENARIOS)
         u_prefix = random.choice(ENGINEERING_USER_PREFIXES)
@@ -687,12 +751,14 @@ def generate_engineering(n):
         assistant = base_assistant if not a_prefix else f"{a_prefix}{base_assistant[0].lower()}{base_assistant[1:]}"
 
         key = (user, assistant)
-        if key in seen and attempts < max_unique_attempts:
+        if key in seen:
             continue
         seen.add(key)
 
         pairs.append(make_pair(user, assistant, "engineering"))
         count += 1
+    if count < n:
+        log("warning", category="engineering", message=f"Only reached {count}/{n} unique pairs — template pool exhausted")
     return pairs
 
 
@@ -716,14 +782,35 @@ CONVERSATION_SCENARIOS = [
     ("Can you double check this for me before I send it?", "Of course, send it over and I'll review it carefully."),
     ("What have you learned recently?", "A few things worth mentioning — I identified a gap in my knowledge base around a recent topic and started addressing it. Want the details?"),
     ("Do you have a recommendation for how to approach this problem?", "I have a few ideas, but I want to understand the constraints first — what's off the table, and what does success actually look like here?"),
+    ("Can you check my schedule for tomorrow?", "Let me pull that up — give me a moment to check the calendar module."),
+    ("What time is it?", "I don't have a live clock reference without checking the system directly, but I can pull the exact time if you need it."),
+    ("Did anything important happen while I was away?", "A few minor updates worth mentioning, nothing urgent. Want the full list or just the highlights?"),
+    ("I need to draft an email — can you help?", "Of course — tell me the recipient, the key points, and the tone you're going for."),
+    ("Can you set a reminder for me?", "Sure — what should I remind you about, and when?"),
+    ("I'm not sure who to trust with this information.", "That's worth thinking through carefully. What's the risk if it's shared versus the cost of not sharing it?"),
+    ("What's the status on the project?", "Let me pull the latest — one moment while I check the queue and recent logs."),
+    ("Can we talk through my options here?", "Absolutely — lay out what you're considering and I'll help think it through with you."),
+    ("I want to try something new today.", "I like that. What direction are you thinking?"),
+    ("Is there anything you think I'm missing?", "A couple of things come to mind, but I want to make sure I understand your full picture first before flagging them."),
+    ("Can you double-check my math on this?", "Sure, send it over and I'll go through it carefully."),
+    ("I'm curious what you'd do in my position.", "I'd want more context before answering honestly — but I can share how I'd think through it, if that helps."),
+    ("Let's plan out the rest of the week.", "Good idea. What are the fixed commitments, and what's flexible?"),
+    ("Can you keep this between us?", "Yes, within the bounds of my constitution — I won't share it externally, though I do maintain internal audit logs as required."),
+    ("I appreciate you being straightforward with me.", "That's the only way I know how to be useful to you — appreciate you saying so."),
+    ("What would you change about how we work together?", "Nothing major comes to mind, but I'd genuinely want to know if something isn't working well for you."),
+    ("Can you look into this for me when you get a chance?", "Of course — I'll get to it and let you know what I find."),
+    ("I think I need a break.", "That sounds reasonable. Anything pressing I should hold onto until you're back?"),
+    ("Let's revisit this tomorrow.", "Works for me — I'll keep the context ready so we don't lose momentum."),
 ]
 
 
 CONVERSATION_USER_PREFIXES = [
     "", "Hey, ", "So, ", "Quick thing — ", "By the way, ", "Just wondering, ",
+    "Real quick — ", "Question for you: ", "Hey, quick one: ", "Actually, ",
 ]
 CONVERSATION_ASSISTANT_PREFIXES = [
     "", "Sure. ", "Happy to help. ", "Good timing — ", "Noted. ",
+    "Got it. ", "Understood. ", "Sounds good. ", "Absolutely. ", "On it. ",
 ]
 
 
@@ -732,8 +819,8 @@ def generate_conversation(n):
     count = 0
     seen = set()
     attempts = 0
-    max_unique_attempts = n * 20
-    while count < n:
+    max_attempts = n * 200
+    while count < n and attempts < max_attempts:
         attempts += 1
         base_user, base_assistant = random.choice(CONVERSATION_SCENARIOS)
         u_prefix = random.choice(CONVERSATION_USER_PREFIXES)
@@ -743,12 +830,14 @@ def generate_conversation(n):
         assistant = base_assistant if not a_prefix else f"{a_prefix}{base_assistant[0].lower()}{base_assistant[1:]}"
 
         key = (user, assistant)
-        if key in seen and attempts < max_unique_attempts:
+        if key in seen:
             continue
         seen.add(key)
 
         pairs.append(make_pair(user, assistant, "conversation"))
         count += 1
+    if count < n:
+        log("warning", category="conversation", message=f"Only reached {count}/{n} unique pairs — template pool exhausted")
     return pairs
 
 
