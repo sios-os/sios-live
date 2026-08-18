@@ -355,10 +355,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--gen", type=int, default=1, help="Generation number")
     parser.add_argument("--data", type=str, default="", help="Custom data path")
+    parser.add_argument("--base_model", type=str, default="", help="Override base model path")
     # DeepSpeed/torchrun pass --local_rank automatically; accept and ignore it
     # (the actual local_rank is obtained from the env var LOCAL_RANK by HF/DS)
     parser.add_argument("--local_rank", type=int, default=0, help="Local rank (set by DeepSpeed)")
     args = parser.parse_args()
+
+    global BASE_MODEL
+    if args.base_model:
+        BASE_MODEL = args.base_model
+        log("finetune", f"Using custom base model: {BASE_MODEL}")
 
     data_path = Path(args.data) if args.data else DATA_PATH
     if not data_path.exists():
