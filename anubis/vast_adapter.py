@@ -104,6 +104,17 @@ class VastAdapter:
     def is_configured(self) -> bool:
         return self.config.is_configured
 
+    @staticmethod
+    def _extract_country(off: dict) -> str:
+        """Extract country from offer. Vast.ai's geolocation can be a string
+        (e.g. 'California, US') or a dict with a 'country' key."""
+        geoloc = off.get("geolocation")
+        if isinstance(geoloc, str):
+            return geoloc
+        if isinstance(geoloc, dict):
+            return geoloc.get("country", "")
+        return off.get("country", "")
+
     def _api_request(self, method: str, path: str, data: dict | None = None) -> dict:
         """Make an authenticated API request to Vast.ai."""
         url = f"{self.config.endpoint}{path}"
@@ -139,48 +150,80 @@ class VastAdapter:
         min_reliability: float = 0.9,
         max_price: float = 5.0,
         num_gpus: int = 1,
+        verified_only: bool = True,
     ) -> list[VastOffer]:
-        """Search for available GPU offers on Vast.ai."""
-        query = {
-            "verified": {"eq": True},
-            "external": {"eq": False},
-            "rentable": {"eq": True},
-            "num_gpus": {"ge": num_gpus},
-            "gpu_ram": {"ge": min_gpu_ram * 1024},
-            "reliability": {"ge": min_reliability},
-            "dph_total": {"le": max_price},
-            "gpu_name": {"eq": gpu_name},
+        """Search for available GPU offers on Vast.ai.
+
+        The Vast.ai API uses specific GPU names like "A100 SXM4", "A100 PCIE",
+        "H100 PCIE", etc. — not just "A100" or "H100". If the exact name yields
+        no results, this method automatically retries with common variants.
+        """
+        # Common GPU name variants in the Vast.ai API
+        gpu_variants = {
+            "A100": ["A100", "A100 SXM4", "A100 PCIE"],
+            "H100": ["H100", "H100 PCIE", "H100 SXM5", "H100 NVL"],
+            "A800": ["A800 PCIE", "A800 SXM4"],
+            "L40S": ["L40S"],
+            "H200": ["H200 SXM5", "H200 PCIE"],
         }
 
-        result = self._api_request("PUT", "/bundles/", {"query": query, "sort": {"dph_total": "asc"}})
+        names_to_try = gpu_variants.get(gpu_name, [gpu_name])
+        all_parsed: list[VastOffer] = []
+        seen_ids: set[int] = set()
 
-        if "error" in result:
-            return []
+        for name in names_to_try:
+            query = {
+                "external": {"eq": False},
+                "rentable": {"eq": True},
+                "num_gpus": {"gte": num_gpus},
+                "gpu_ram": {"gte": min_gpu_ram * 1024},  # API uses MB
+                "reliability": {"gte": min_reliability},
+                "dph_total": {"lte": max_price},
+                "gpu_name": {"eq": name},
+                "order": [["dph_total", "asc"]],
+                "limit": 50,
+            }
+            if verified_only:
+                query["verified"] = {"eq": True}
 
-        offers = result.get("offers", [])
-        parsed = []
-        for off in offers:
-            try:
-                parsed.append(VastOffer(
-                    id=off.get("id", 0),
-                    gpu_name=off.get("gpu_name", ""),
-                    gpu_ram=off.get("gpu_ram", 0) / 1024,
-                    num_gpus=off.get("num_gpus", 1),
-                    dph_total=off.get("dph_total", 0),
-                    reliability=off.get("reliability", 0),
-                    dlperf=off.get("dlperf", 0),
-                    cpu_cores=off.get("cpu_cores", 0),
-                    cpu_ram=off.get("cpu_ram", 0) / 1024,
-                    disk_space=off.get("disk_space", 0),
-                    inet_down=off.get("inet_down", 0),
-                    country=off.get("geolocation", {}).get("country", ""),
-                    direct_port_count=off.get("direct_port_count", 0),
-                    cuda_max_good=off.get("cuda_max_good", ""),
-                ))
-            except Exception:
+            result = self._api_request("POST", "/bundles/", query)
+
+            if "error" in result:
                 continue
 
-        return parsed
+            offers = result.get("offers", [])
+            for off in offers:
+                off_id = off.get("id", 0)
+                if off_id in seen_ids:
+                    continue
+                seen_ids.add(off_id)
+                try:
+                    all_parsed.append(VastOffer(
+                        id=off_id,
+                        gpu_name=off.get("gpu_name", ""),
+                        gpu_ram=off.get("gpu_ram", 0) / 1024,
+                        num_gpus=off.get("num_gpus", 1),
+                        dph_total=off.get("dph_total", 0),
+                        reliability=off.get("reliability", 0),
+                        dlperf=off.get("dlperf", 0),
+                        cpu_cores=off.get("cpu_cores", 0),
+                        cpu_ram=off.get("cpu_ram", 0) / 1024,
+                        disk_space=off.get("disk_space", 0),
+                        inet_down=off.get("inet_down", 0),
+                        country=self._extract_country(off),
+                        direct_port_count=off.get("direct_port_count", 0),
+                        cuda_max_good=off.get("cuda_max_good", ""),
+                    ))
+                except Exception:
+                    continue
+
+            # Rate limit: API allows ~5 requests per few seconds
+            if len(names_to_try) > 1:
+                time.sleep(3)
+
+        # Sort by price
+        all_parsed.sort(key=lambda o: o.dph_total)
+        return all_parsed
 
     def list_instances(self) -> list[VastInstance]:
         """List all rented instances."""
@@ -246,18 +289,17 @@ class VastAdapter:
 
         data = {
             "client_id": "me",
-            "bundle": offer_id,
             "image": image,
             "disk": disk_gb,
             "label": label,
-            "on_start": on_start,
+            "onstart": on_start,
             "runtype": "ssh",
-            "python_args": "",
             "env": {"JUPYTER_DIR": "/workspace"},
             "test": False,
         }
 
-        result = self._api_request("PUT", "/create/", data)
+        # Use /asks/{offer_id}/ endpoint to create instance
+        result = self._api_request("PUT", f"/asks/{offer_id}/", data)
 
         if "error" in result:
             return result
@@ -325,6 +367,7 @@ class VastAdapter:
         min_gpu_ram: float = 80,
         min_reliability: float = 0.9,
         max_price: float = 5.0,
+        num_gpus: int = 1,
         disk_gb: float = 200,
         image: str = "vastai/unsloth-studio:latest",
         label: str = "anubis-training",
@@ -344,6 +387,7 @@ class VastAdapter:
             min_gpu_ram=min_gpu_ram,
             min_reliability=min_reliability,
             max_price=max_price,
+            num_gpus=num_gpus,
         )
 
         if not offers:
