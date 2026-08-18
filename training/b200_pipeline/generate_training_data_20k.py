@@ -57,7 +57,7 @@ if CRED_FILE.exists():
     GEMINI_API_KEY = creds.get("gemini", {}).get("api_key", "")
     GEMINI_MODEL = creds.get("gemini", {}).get("model", "gemini-2.0-flash")
 
-GEMINI_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+GEMINI_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent"
 
 # Target pair counts per category
 TARGET_COUNTS = {
@@ -72,9 +72,10 @@ TOTAL_TARGET = sum(TARGET_COUNTS.values())  # 20,000
 
 # Rate limiting: Gemini free tier = 15 req/min, paid = higher
 # We'll use 10 req/sec to be safe with paid tier
-RATE_LIMIT_DELAY = 0.1  # 100ms between requests = 10 req/sec
-MAX_RETRIES = 3
-BATCH_SIZE = 20  # pairs per API call (Gemini generates multiple at once)
+RATE_LIMIT_DELAY = 4.0  # 4s between requests = 15 req/min (Gemini free tier limit)
+MAX_RETRIES = 5
+BATCH_SIZE = 30  # pairs per API call (Gemini generates multiple at once)
+MAX_WORKERS = 1  # single worker to stay within free tier limits
 
 # ─── ANUBIS Personality ───────────────────────────────────────────────────
 
@@ -119,7 +120,7 @@ def extract_constitution_laws():
     const_path = REPO_ROOT / "anubis" / "constitution.py"
     if not const_path.exists():
         return []
-    content = const_path.read_text()
+    content = const_path.read_text(encoding="utf-8", errors="replace")
     # Extract law descriptions from the IMMUTABLE_LAWS or similar
     laws = []
     # Parse the law names and descriptions
@@ -143,7 +144,7 @@ def extract_book_of_anubis():
     book_path = REPO_ROOT / "anubis" / "book_of_anubis.py"
     if not book_path.exists():
         return ""
-    content = book_path.read_text()
+    content = book_path.read_text(encoding="utf-8", errors="replace")
     # Extract docstrings and string content
     docstrings = re.findall(r'"""(.*?)"""', content, re.DOTALL)
     return "\n\n".join(d.strip() for d in docstrings if len(d.strip()) > 50)
@@ -154,7 +155,7 @@ def extract_consciousness():
     path = REPO_ROOT / "anubis" / "consciousness.py"
     if not path.exists():
         return ""
-    content = path.read_text()
+    content = path.read_text(encoding="utf-8", errors="replace")
     docstrings = re.findall(r'"""(.*?)"""', content, re.DOTALL)
     return "\n\n".join(d.strip() for d in docstrings if len(d.strip()) > 50)
 
@@ -168,7 +169,7 @@ def extract_knowledge_files():
     for f in sorted(kc_dir.glob("*.py")):
         if f.name == "__init__.py":
             continue
-        content = f.read_text()
+        content = f.read_text(encoding="utf-8", errors="replace")
         # Extract docstrings which contain the actual knowledge
         docstrings = re.findall(r'"""(.*?)"""', content, re.DOTALL)
         text = "\n".join(d.strip() for d in docstrings if len(d.strip()) > 20)
@@ -195,6 +196,7 @@ def call_gemini(prompt, max_tokens=4096, temperature=0.7):
             "maxOutputTokens": max_tokens,
             "temperature": temperature,
             "topP": 0.95,
+            "thinkingConfig": {"thinkingBudget": 0},
         },
     }
 
@@ -561,55 +563,72 @@ def generate_all_pairs():
         total_generated = len(existing_pairs)
         total_target = TOTAL_TARGET
 
-        while total_generated < total_target:
-            # Pick the category that needs the most pairs
-            needed = {cat: TARGET_COUNTS[cat] - counts[cat] for cat in TARGET_COUNTS}
-            needed = {cat: n for cat, n in needed.items() if n > 0}
+        # Use thread pool for parallel API calls
+        from threading import Lock
+        file_lock = Lock()
 
-            if not needed:
-                break
-
-            # Pick category with most needed, with some randomness
-            categories = list(needed.keys())
-            weights = [needed[c] for c in categories]
-            category = random.choices(categories, weights=weights, k=1)[0]
-
-            # Generate batch
+        def generate_and_write(category):
+            """Generate a batch and write to file. Thread-safe."""
+            nonlocal total_generated
             try:
                 pairs = generators[category]()
-                time.sleep(RATE_LIMIT_DELAY)
             except Exception as e:
                 log("error", category=category, error=str(e))
-                time.sleep(5)
-                continue
+                return []
 
             if not pairs:
-                log("empty_batch", category=category)
-                time.sleep(2)
-                continue
+                return []
 
-            # Write pairs
-            for p in pairs:
-                p["pair_id"] = hashlib.sha256(
-                    f"{category}_{total_generated}_{time.time()}".encode()
-                ).hexdigest()[:16]
-                p["messages"] = [
-                    {"role": "system", "content": ANUBIS_PERSONALITY},
-                    {"role": "user", "content": p["user"]},
-                    {"role": "assistant", "content": p["assistant"]},
-                ]
-                out_f.write(json.dumps(p) + "\n")
-                counts[category] += 1
-                total_generated += 1
+            written = []
+            with file_lock:
+                for p in pairs:
+                    p["pair_id"] = hashlib.sha256(
+                        f"{category}_{total_generated}_{time.time()}".encode()
+                    ).hexdigest()[:16]
+                    p["messages"] = [
+                        {"role": "system", "content": ANUBIS_PERSONALITY},
+                        {"role": "user", "content": p["user"]},
+                        {"role": "assistant", "content": p["assistant"]},
+                    ]
+                    out_f.write(json.dumps(p) + "\n")
+                    counts[category] += 1
+                    total_generated += 1
+                    written.append(p)
+                out_f.flush()
+            return written
 
-            out_f.flush()
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            while total_generated < total_target:
+                # Submit a batch of parallel jobs
+                futures = []
+                for _ in range(MAX_WORKERS * 2):
+                    # Pick the category that needs the most pairs
+                    needed = {cat: TARGET_COUNTS[cat] - counts[cat] for cat in TARGET_COUNTS}
+                    needed = {cat: n for cat, n in needed.items() if n > 0}
+                    if not needed:
+                        break
 
-            if total_generated % 100 < BATCH_SIZE:
+                    categories = list(needed.keys())
+                    weights = [needed[c] for c in categories]
+                    category = random.choices(categories, weights=weights, k=1)[0]
+                    futures.append(executor.submit(generate_and_write, category))
+
+                # Wait for all to complete
+                total_this_round = 0
+                for future in as_completed(futures):
+                    pairs = future.result()
+                    total_this_round += len(pairs)
+
                 log("progress",
                     total=total_generated,
                     target=total_target,
                     pct=round(total_generated / total_target * 100, 1),
+                    this_round=total_this_round,
                     **counts)
+
+                if total_this_round == 0:
+                    log("warning", message="No pairs generated this round, sleeping...")
+                    time.sleep(5)
 
     log("complete", total=total_generated, **counts)
     return total_generated
