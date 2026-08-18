@@ -313,6 +313,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--gen", type=int, default=1, help="Generation number")
     parser.add_argument("--data", type=str, default="", help="Custom data path")
+    # DeepSpeed/torchrun pass --local_rank automatically; accept and ignore it
+    # (the actual local_rank is obtained from the env var LOCAL_RANK by HF/DS)
+    parser.add_argument("--local_rank", type=int, default=0, help="Local rank (set by DeepSpeed)")
     args = parser.parse_args()
 
     data_path = Path(args.data) if args.data else DATA_PATH
